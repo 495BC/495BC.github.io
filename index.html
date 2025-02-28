@@ -14,12 +14,12 @@
     }
     body {
       font-family: 'IBM Plex Sans', sans-serif;
-      color: #333;
-      background: linear-gradient(to bottom, #000000, #FFFFFF);
+      background: #111; /* near black background */
+      color: #fff;
       min-height: 100vh;
+      padding: 20px;
     }
-
-    /* MAIN TITLE - Fully black background with animated gradient text */
+    /* MAIN TITLE - Fully black with animated gradient text */
     .main-title {
       background-color: #000;
       text-align: center;
@@ -36,19 +36,17 @@
       color: transparent;
       transition: background-position 0.5s;
     }
-
-    /* NAVIGATION BAR: semi-transparent grey (40% opacity) */
+    /* NAVIGATION BAR with Category Buttons on Left */
     .nav-bar {
-      background-color: rgba(128, 128, 128, 0.4);
+      background-color: rgba(128,128,128,0.4);
       padding: 1rem;
       display: flex;
       justify-content: flex-start;
       align-items: center;
       margin-left: 10px;
       flex-wrap: wrap;
+      margin-bottom: 1rem;
     }
-
-    /* Category Buttons on left side */
     .category-buttons {
       display: flex;
       gap: 1rem;
@@ -68,37 +66,74 @@
       transform: scale(1.1);
       background-color: #357ab7;
     }
-
-    /* Sections */
-    section {
-      display: none;
-      background-color: #fff;
-      margin: 1rem auto;
-      padding: 1rem;
-      border-radius: 4px;
-      max-width: 90%;
-      overflow-x: auto;
-    }
-    section h2 {
-      margin-bottom: 1rem;
-      color: #444;
-    }
-
-    /* Tables */
+    /* Instead of a traditional table, we create a vertical list */
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 10px;
       margin-top: 1rem;
     }
-    table th, table td {
-      border: 1px solid #ccc;
-      padding: 0.75rem 1rem;
-      text-align: left;
-      background-color: #f9f9f9; /* Default background */
+    /* Hide the original table header */
+    thead { display: none; }
+    /* Each row is a flex container (a "player-box") */
+    .player-row {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 5px;
+      background: #222;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
-    table th {
-      background-color: #e6e6e6;
+    /* The index cell – separate styling per rank */
+    .player-index {
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+      border-radius: 5px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: bold;
+      /* Add a slight inner padding so the background image shows within the border */
+      padding: 2px;
+    }
+    .player-index.top1 {
+      background-image: url("https://th.bing.com/th/id/R.0d4252fe64400ea40fbb8d5057575b0b?rik=DR%2fAwxQw3GejEg&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2fd%2fd%2f0%2f423799.jpg&ehk=TccvLsFgMzn%2bdD0IYZ8CZ5KmhPTvj6t%2fdWsl9%2bq5TB0%3d&risl=&pid=ImgRaw&r=0");
+      background-size: cover;
+      background-position: center;
+      border: 2px solid;
+      border-image: linear-gradient(to right, #FFD700, #FFC107) 1;
+    }
+    .player-index.top2 {
+      background-image: url("https://wallup.net/wp-content/uploads/2015/12/95020-anime.jpg");
+      background-size: cover;
+      background-position: center;
+      border: 2px solid;
+      border-image: linear-gradient(to right, #C0C0C0, #B0B0B0) 1;
+    }
+    .player-index.top3 {
+      background-image: url("https://th.bing.com/th/id/R.6297ef18cfdca34f08a2eabfb571e4a7?rik=m%2f4CSp1o8%2bE7MQ&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f10%2fAnime-wallpaper-background-download.jpg&ehk=2fHJsnzJOOf1X%2bOF64mxzGaIMwi1XUx9PZJ71YOkfBY%3d&risl=&pid=ImgRaw&r=0");
+      background-size: cover;
+      background-position: center;
+      border: 2px solid;
+      border-image: linear-gradient(to right, #cd7f32, #b87333) 1;
+    }
+    .player-index.other {
+      background: linear-gradient(90deg, #333, #111);
+      border: 2px solid #444;
+    }
+    /* The rest of the row cells – each value in its own box */
+    .player-cell {
+      padding: 10px;
+      border-left: 1px solid #444;
+      flex: 1;
+    }
+    /* Optional: slight gradient on the cells themselves */
+    .player-cell {
+      background: linear-gradient(90deg, #222, #111);
+      border-radius: 3px;
     }
   </style>
   
@@ -122,6 +157,7 @@
     </div>
   </div>
 
+  <!-- The table now acts as a container for a vertical list -->
   <!-- QB SECTION -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
@@ -159,23 +195,22 @@
   </section>
 
   <script>
-    // Ask for image links for top three rows.
-    // Replace these placeholder URLs with your actual image links.
+    // Top 3 background image URLs – update these to your actual image links if desired.
     const TOP3_BG_IMAGES = [
-      "https://th.bing.com/th/id/R.0d4252fe64400ea40fbb8d5057575b0b?rik=DR%2fAwxQw3GejEg&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2fd%2fd%2f0%2f423799.jpg&ehk=TccvLsFgMzn%2bdD0IYZ8CZ5KmhPTvj6t%2fdWsl9%2bq5TB0%3d&risl=&pid=ImgRaw&r=0", // Rank 1 background image
-      "https://wallup.net/wp-content/uploads/2015/12/95020-anime.jpg", // Rank 2 background image
-      "https://th.bing.com/th/id/R.6297ef18cfdca34f08a2eabfb571e4a7?rik=m%2f4CSp1o8%2bE7MQ&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f10%2fAnime-wallpaper-background-download.jpg&ehk=2fHJsnzJOOf1X%2bOF64mxzGaIMwi1XUx9PZJ71YOkfBY%3d&risl=&pid=ImgRaw&r=0"  // Rank 3 background image
+      "https://th.bing.com/th/id/R.0d4252fe64400ea40fbb8d5057575b0b?rik=DR%2fAwxQw3GejEg&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2fd%2fd%2f0%2f423799.jpg&ehk=TccvLsFgMzn%2bdD0IYZ8CZ5KmhPTvj6t%2fdWsl9%2bq5TB0%3d&risl=&pid=ImgRaw&r=0",
+      "https://wallup.net/wp-content/uploads/2015/12/95020-anime.jpg",
+      "https://th.bing.com/th/id/R.6297ef18cfdca34f08a2eabfb571e4a7?rik=m%2f4CSp1o8%2bE7MQ&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f10%2fAnime-wallpaper-background-download.jpg&ehk=2fHJsnzJOOf1X%2bOF64mxzGaIMwi1XUx9PZJ71YOkfBY%3d&risl=&pid=ImgRaw&r=0"
     ];
-
+    
     // CSV links – replace with your published CSV URLs
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSODRpqky0PxX7b2epxF2a6GFy7FyEKk7onSn96X9FjHSZXv03nE9zxQC6s35AiM1q8W7d1zrowdurX/pub?output=csv";
-
+    
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
-
-    // Build all tables on page load and show QB by default
+    
+    // Build all tables on page load and show QB by default.
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildTable(CSV_QB_LINK, "qb-table");
       fetchAndBuildTable(CSV_WR_LINK, "wr-table");
@@ -183,8 +218,8 @@
       fetchAndBuildTable(CSV_DE_LINK, "de-table");
       showSection("qb-section");
     });
-
-    // Update title gradient effect based on mouse position
+    
+    // Update title gradient effect based on mouse position.
     document.querySelector('.main-title').addEventListener('mousemove', (e) => {
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -192,7 +227,7 @@
       document.getElementById('title-text').style.setProperty('--mouse-x', x + 'px');
       document.getElementById('title-text').style.setProperty('--mouse-y', y + 'px');
     });
-
+    
     /**
      * showSection: Hides all sections and shows only the requested one.
      */
@@ -201,12 +236,11 @@
         document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
       });
     }
-
+    
     /**
-     * fetchAndBuildTable: Builds table columns & rows from CSV,
-     * adds a "Rank" column, converts "RATING" numbers to stars,
-     * and displays USERNAME as plain text.
-     * For the top 3 rows (rank 1-3), applies a background image.
+     * fetchAndBuildTable: Builds a vertical list from CSV data.
+     * Each row becomes a "player-row" (a flex container) with an index cell (styled based on rank)
+     * and additional cells (each in its own "player-cell").
      */
     function fetchAndBuildTable(csvLink, tableId) {
       fetch(csvLink)
@@ -215,56 +249,51 @@
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
           const data = results.data;
           const fields = results.meta.fields;
-
+    
           const table = document.getElementById(tableId);
-          const thead = table.querySelector("thead");
           const tbody = table.querySelector("tbody");
-
-          thead.innerHTML = "";
           tbody.innerHTML = "";
-
-          // Create header row with an extra "Rank" column
-          const headerRow = document.createElement("tr");
-          const rankTh = document.createElement("th");
-          rankTh.textContent = "Rank";
-          headerRow.appendChild(rankTh);
-          fields.forEach(fieldName => {
-            const th = document.createElement("th");
-            th.textContent = fieldName;
-            headerRow.appendChild(th);
-          });
-          thead.appendChild(headerRow);
-
-          // Create table rows
+    
+          // For each row in the CSV, create a player-row.
           data.forEach((rowObj, index) => {
             const tr = document.createElement("tr");
+            tr.classList.add("player-row");
+    
+            // Create the index cell.
             const rankTd = document.createElement("td");
+            rankTd.classList.add("player-index");
             rankTd.textContent = index + 1;
-            tr.appendChild(rankTd);
-
-            // If this is one of the top 3 rows, set a background image
-            if (index < 3 && TOP3_BG_IMAGES[index]) {
-              tr.style.backgroundImage = `url(${TOP3_BG_IMAGES[index]})`;
-              tr.style.backgroundSize = "cover";
-              tr.style.backgroundRepeat = "no-repeat";
+            // Style the index cell based on rank.
+            if(index === 0) {
+              rankTd.classList.add("top1");
+            } else if(index === 1) {
+              rankTd.classList.add("top2");
+            } else if(index === 2) {
+              rankTd.classList.add("top3");
+            } else {
+              rankTd.classList.add("other");
+              rankTd.style.background = "linear-gradient(90deg, #333, #111)";
+              rankTd.style.border = "2px solid #444";
             }
-
+            tr.appendChild(rankTd);
+    
+            // For each field, create a cell.
             fields.forEach(fieldName => {
               const td = document.createElement("td");
+              td.classList.add("player-cell");
               const rawValue = rowObj[fieldName] || "";
-
-              if (fieldName.toUpperCase() === "RATING") {
+              // For RATING, convert to stars.
+              if(fieldName.toUpperCase() === "RATING") {
                 const ratingValue = parseInt(rawValue, 10) || 0;
                 td.textContent = "⭐".repeat(ratingValue);
               }
-              // Display USERNAME as plain text (remove hyperlink)
-              else if (fieldName.toUpperCase() === "USERNAME") {
-                td.textContent = rawValue;
-              } else {
+              // For USERNAME (and others) simply display text.
+              else {
                 td.textContent = rawValue;
               }
               tr.appendChild(td);
             });
+    
             tbody.appendChild(tr);
           });
         })
