@@ -78,59 +78,51 @@
       display: block;
     }
     .category-buttons a span:nth-child(1) {
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
       background: linear-gradient(90deg, transparent, #03e9f4);
       animation: animate1 1s linear infinite;
     }
     @keyframes animate1 {
-      0%   { left: -100%; }
+      0% { left: -100%; }
       50%,100% { left: 100%; }
     }
     .category-buttons a span:nth-child(2) {
-      top: -100%;
-      right: 0;
-      width: 2px;
-      height: 100%;
+      top: -100%; right: 0;
+      width: 2px; height: 100%;
       background: linear-gradient(180deg, transparent, #03e9f4);
       animation: animate2 1s linear infinite;
       animation-delay: 0.25s;
     }
     @keyframes animate2 {
-      0%   { top: -100%; }
+      0% { top: -100%; }
       50%,100% { top: 100%; }
     }
     .category-buttons a span:nth-child(3) {
-      bottom: 0;
-      right: 0;
-      width: 100%;
-      height: 2px;
+      bottom: 0; right: 0;
+      width: 100%; height: 2px;
       background: linear-gradient(270deg, transparent, #03e9f4);
       animation: animate3 1s linear infinite;
       animation-delay: 0.5s;
     }
     @keyframes animate3 {
-      0%   { right: -100%; }
+      0% { right: -100%; }
       50%,100% { right: 100%; }
     }
     .category-buttons a span:nth-child(4) {
-      bottom: -100%;
-      left: 0;
-      width: 2px;
-      height: 100%;
+      bottom: -100%; left: 0;
+      width: 2px; height: 100%;
       background: linear-gradient(360deg, transparent, #03e9f4);
       animation: animate4 1s linear infinite;
       animation-delay: 0.75s;
     }
     @keyframes animate4 {
-      0%   { bottom: -100%; }
+      0% { bottom: -100%; }
       50%,100% { bottom: 100%; }
     }
 
     /***********************************************
-     * TABLES / COLUMNS
+     * "VERTICAL LIST" LAYOUT
      ***********************************************/
     section {
       display: none;
@@ -145,40 +137,64 @@
       color: #fff;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      color: #fff;
-    }
-    thead tr {
-      background-color: #333;
-    }
-    th, td {
-      border: 1px solid #444;
-      padding: 0.75rem 1rem;
-      text-align: left;
-    }
-    th {
-      font-weight: bold;
+    /* Container for the heading row + the player rows */
+    .list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px; /* spacing between heading row & player rows */
     }
 
-    /* Player index cell styles by rank: gold, silver, bronze, or normal. */
-    .top1 {
-      border: 2px solid gold;
+    /* A "heading row" with columns labeled */
+    .heading-row {
+      display: flex;
+      background: #333;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .heading-cell {
+      flex: 1;
+      text-align: left;
+      padding: 0 10px;
+    }
+    /* rank heading narrower */
+    .heading-cell.rank-cell {
+      width: 60px;
+      flex-shrink: 0;
+    }
+
+    /* Each player row is a flex container, "padded list" style */
+    .player-row {
+      display: flex;
+      align-items: center;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    /* The rank cell for each row, with special borders for top 1/2/3 */
+    .player-rank {
+      width: 60px;
+      flex-shrink: 0;
+      text-align: center;
+      font-weight: bold;
+      margin-right: 10px;
+      padding: 10px;
+      border-radius: 5px;
       background: #000;
     }
-    .top2 {
-      border: 2px solid silver;
-      background: #000;
-    }
-    .top3 {
-      border: 2px solid #cd7f32; /* Bronze */
-      background: #000;
-    }
-    .other {
-      border: 2px solid #444;
-      background: #000;
+    .top1 { border: 2px solid gold; }
+    .top2 { border: 2px solid silver; }
+    .top3 { border: 2px solid #cd7f32; }
+    .other { border: 2px solid #444; }
+
+    /* Each cell after rank */
+    .player-cell {
+      flex: 1;
+      padding: 10px;
+      background: #111;
+      border-radius: 5px;
+      margin-right: 5px;
     }
   </style>
   <!-- Papa Parse via CDN -->
@@ -191,7 +207,7 @@
     <h1>Raider TC Stats</h1>
   </div>
 
-  <!-- NAVIGATION BAR with Neon Buttons -->
+  <!-- NAV BAR with Neon Buttons -->
   <div class="nav-bar">
     <div class="category-buttons">
       <a href="#" onclick="showSection('qb-section')">
@@ -216,37 +232,25 @@
   <!-- QB SECTION -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
-    <table id="qb-table">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+    <div class="list-container" id="qb-container"></div>
   </section>
 
   <!-- WR SECTION -->
   <section id="wr-section">
     <h2>Wide Receiver Stats</h2>
-    <table id="wr-table">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+    <div class="list-container" id="wr-container"></div>
   </section>
 
   <!-- DB SECTION -->
   <section id="db-section">
     <h2>Defensive Back Stats</h2>
-    <table id="db-table">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+    <div class="list-container" id="db-container"></div>
   </section>
 
   <!-- DE SECTION -->
   <section id="de-section">
     <h2>Defensive End Stats</h2>
-    <table id="de-table">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+    <div class="list-container" id="de-container"></div>
   </section>
 
   <script>
@@ -260,12 +264,12 @@
 
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On page load, build all tables & show QB by default
+    // On page load, build all "lists" & show QB by default
     window.addEventListener('DOMContentLoaded', () => {
-      fetchAndBuildTable(CSV_QB_LINK, "qb-table");
-      fetchAndBuildTable(CSV_WR_LINK, "wr-table");
-      fetchAndBuildTable(CSV_DB_LINK, "db-table");
-      fetchAndBuildTable(CSV_DE_LINK, "de-table");
+      fetchAndBuildList(CSV_QB_LINK, "qb-container");
+      fetchAndBuildList(CSV_WR_LINK, "wr-container");
+      fetchAndBuildList(CSV_DB_LINK, "db-container");
+      fetchAndBuildList(CSV_DE_LINK, "de-container");
       showSection("qb-section");
     });
 
@@ -277,13 +281,13 @@
     }
 
     /**
-     * fetchAndBuildTable:
-     *  - Builds column headers from CSV
-     *  - Adds "Rank" column
+     * fetchAndBuildList:
+     *  - Builds a "heading row" with "Rank" + field names
+     *  - Creates a "player-row" for each CSV row
+     *  - For top 1/2/3, sets gold/silver/bronze border
      *  - Converts "RATING" to stars
-     *  - Styles top 1/2/3 index cells with gold/silver/bronze
      */
-    function fetchAndBuildTable(csvLink, tableId) {
+    function fetchAndBuildList(csvLink, containerId) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
@@ -291,62 +295,70 @@
           const data = results.data;           // array of row objects
           const fields = results.meta.fields;  // array of column headers
 
-          const table = document.getElementById(tableId);
-          const thead = table.querySelector("thead");
-          const tbody = table.querySelector("tbody");
+          const container = document.getElementById(containerId);
+          container.innerHTML = "";
 
-          // Clear any existing content
-          thead.innerHTML = "";
-          tbody.innerHTML = "";
+          // Create heading row
+          const headingRow = document.createElement("div");
+          headingRow.classList.add("heading-row");
 
-          // Build header row (including "Rank" column)
-          const headerRow = document.createElement("tr");
-          const rankTh = document.createElement("th");
-          rankTh.textContent = "Rank";
-          headerRow.appendChild(rankTh);
+          // Rank heading cell
+          const rankHeading = document.createElement("div");
+          rankHeading.classList.add("heading-cell", "rank-cell");
+          rankHeading.textContent = "Rank";
+          headingRow.appendChild(rankHeading);
+
+          // Field heading cells
           fields.forEach(fieldName => {
-            const th = document.createElement("th");
-            th.textContent = fieldName;
-            headerRow.appendChild(th);
+            const cell = document.createElement("div");
+            cell.classList.add("heading-cell");
+            cell.textContent = fieldName;
+            headingRow.appendChild(cell);
           });
-          thead.appendChild(headerRow);
 
-          // Build data rows
+          container.appendChild(headingRow);
+
+          // Now create each player-row
           data.forEach((rowObj, index) => {
-            const tr = document.createElement("tr");
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("player-row");
 
             // Rank cell
-            const rankTd = document.createElement("td");
-            rankTd.textContent = index + 1;
+            const rankDiv = document.createElement("div");
+            rankDiv.classList.add("player-rank");
+            rankDiv.textContent = index + 1;
 
-            // Apply top1/top2/top3/other classes for border color
+            // Border color for top 1/2/3
             if (index === 0) {
-              rankTd.classList.add("top1");
+              rankDiv.classList.add("top1");
             } else if (index === 1) {
-              rankTd.classList.add("top2");
+              rankDiv.classList.add("top2");
             } else if (index === 2) {
-              rankTd.classList.add("top3");
+              rankDiv.classList.add("top3");
             } else {
-              rankTd.classList.add("other");
+              rankDiv.classList.add("other");
             }
-            tr.appendChild(rankTd);
 
-            // Add cells for each CSV field
+            rowDiv.appendChild(rankDiv);
+
+            // Each field cell
             fields.forEach(fieldName => {
-              const td = document.createElement("td");
+              const cellDiv = document.createElement("div");
+              cellDiv.classList.add("player-cell");
               const rawValue = rowObj[fieldName] || "";
 
               // Convert "RATING" to stars
               if (fieldName.toUpperCase() === "RATING") {
                 const ratingValue = parseInt(rawValue, 10) || 0;
-                td.textContent = "⭐".repeat(ratingValue);
+                cellDiv.textContent = "⭐".repeat(ratingValue);
               } else {
-                td.textContent = rawValue;
+                cellDiv.textContent = rawValue;
               }
-              tr.appendChild(td);
+
+              rowDiv.appendChild(cellDiv);
             });
 
-            tbody.appendChild(tr);
+            container.appendChild(rowDiv);
           });
         })
         .catch(err => console.error("Error fetching CSV:", err));
