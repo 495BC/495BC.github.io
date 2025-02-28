@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AFS Stats - GitHub Pages</title>
+  <title>AFS Stats - Enhanced</title>
   <style>
     /* Basic Reset & Body */
     * {
@@ -14,18 +14,26 @@
       font-family: Arial, sans-serif;
       background-color: #f2f2f2;
       color: #333;
-      padding: 1rem;
+      padding: 0; /* We'll handle spacing in sections */
     }
-    /* Header / Nav */
+
+    /***************************************
+     * HEADER / NAV
+     ***************************************/
     header {
       background-color: #000;
       padding: 1rem;
-      margin-bottom: 2rem;
+    }
+    header nav {
+      display: flex;             /* Flex layout for alignment */
+      justify-content: space-between;
+      align-items: center;
     }
     nav ul {
       list-style: none;
       display: flex;
       gap: 1rem;
+      margin: 0;
     }
     nav ul li a {
       color: #fff;
@@ -33,31 +41,75 @@
       font-weight: bold;
     }
     .enroll-button {
-      float: right;
       background-color: #007bff;
       color: #fff;
       border: none;
       padding: 0.5rem 1rem;
       cursor: pointer;
       font-weight: bold;
-    }
-    /* Headings */
-    h1 {
-      margin-bottom: 1rem;
-    }
-    h2 {
-      margin-bottom: 0.5rem;
-      margin-top: 1.5rem;
-      color: #444;
-    }
-    /* Section Layout */
-    section {
-      margin-bottom: 2rem;
-      background-color: #fff;
-      padding: 1rem;
       border-radius: 4px;
     }
-    /* Tables */
+    .enroll-button:hover {
+      background-color: #0056b3;
+    }
+
+    /***************************************
+     * POSITION BUTTONS
+     ***************************************/
+    .position-buttons {
+      background-color: #e6f0ff; /* Light bluish background, tweak as you like */
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .position-buttons button {
+      background-color: #4a90e2;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    .position-buttons button:hover {
+      background-color: #357ab7;
+    }
+
+    /***************************************
+     * MAIN TITLE
+     ***************************************/
+    .main-title {
+      padding: 1rem;
+      text-align: center;
+      background-color: #fff;
+      margin-bottom: 1rem;
+    }
+    .main-title h1 {
+      font-size: 2rem;
+      color: #333;
+    }
+
+    /***************************************
+     * SECTIONS
+     ***************************************/
+    section {
+      display: none; /* Hidden by default; toggled via showSection() */
+      background-color: #fff;
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 4px;
+      max-width: 1200px; /* Control overall width */
+    }
+    section h2 {
+      margin-bottom: 1rem;
+      color: #444;
+    }
+
+    /***************************************
+     * TABLES
+     ***************************************/
     table {
       width: 100%;
       border-collapse: collapse;
@@ -72,6 +124,7 @@
       background-color: #e6e6e6;
       font-weight: bold;
     }
+
   </style>
 
   <!-- Include Papa Parse via CDN -->
@@ -93,7 +146,18 @@
     </nav>
   </header>
 
-  <h1>AFS Stats</h1>
+  <!-- POSITION BUTTONS -->
+  <div class="position-buttons">
+    <button onclick="showSection('qb-section')">QB</button>
+    <button onclick="showSection('wr-section')">WR</button>
+    <button onclick="showSection('db-section')">DB</button>
+    <button onclick="showSection('de-section')">DE</button>
+  </div>
+
+  <!-- MAIN TITLE -->
+  <div class="main-title">
+    <h1>AFS Stats</h1>
+  </div>
 
   <!-- QB SECTION -->
   <section id="qb-section">
@@ -132,23 +196,39 @@
   </section>
 
   <script>
-    // -- Replace these with your own published CSV links:
+    // Replace these with your own published CSV links:
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
 
-    // On page load, build all four tables
+    // We'll keep track of which sections exist
+    const sections = ["qb-section", "wr-section", "db-section", "de-section"];
+
+    // On page load, build all four tables and show QB by default
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildTable(CSV_QB_LINK, "qb-table");
       fetchAndBuildTable(CSV_WR_LINK, "wr-table");
       fetchAndBuildTable(CSV_DB_LINK, "db-table");
       fetchAndBuildTable(CSV_DE_LINK, "de-table");
+
+      // Show QB section by default
+      showSection("qb-section");
     });
 
     /**
+     * showSection - Hides all sections, shows only the requested one
+     * @param {string} sectionId
+     */
+    function showSection(sectionId) {
+      sections.forEach(id => {
+        document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
+      });
+    }
+
+    /**
      * fetchAndBuildTable - Dynamically builds columns & rows from CSV,
-     * adding a "Rank" column and converting "RATING" numbers into stars.
+     * adds a "Rank" column and converts "RATING" numbers into stars.
      *
      * @param {string} csvLink - The published CSV link
      * @param {string} tableId - The ID of the <table> element
@@ -173,7 +253,7 @@
 
           // Build the header row (including a "Rank" column)
           const headerRow = document.createElement("tr");
-          
+
           // Rank column
           const rankTh = document.createElement("th");
           rankTh.textContent = "Rank";
