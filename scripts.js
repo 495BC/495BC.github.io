@@ -3,6 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const adminButton = document.getElementById("admin-button");
   const loginButton = document.getElementById("login-button");
   const logoutButton = document.getElementById("logout-button");
+function logoutAdmin() {
+  localStorage.removeItem("admin");
+  localStorage.removeItem("loggedInUser");
+  alert("Logged out!");
+  window.location.href = "login.html";
+}
 
   // Check if user is logged in
   if (localStorage.getItem("loggedInUser") === "495BC") {
