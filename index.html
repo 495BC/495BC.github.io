@@ -1,127 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Player Stats Page</title>
-  <style>
-    /* Basic Reset & Body */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    /* 
-      Gradient background from a dark blue (#0B3D91) at top 
-      to a lighter blue (#E6F0FF) at bottom. 
-      Adjust colors if desired.
-    */
-    body {
-      font-family: Arial, sans-serif;
-      color: #333;
-      background: linear-gradient(to bottom, #0B3D91, #E6F0FF);
-      min-height: 100vh; /* ensure gradient covers full screen */
-    }
-
-    /***************************************
-     * HEADER / NAV
-     ***************************************/
-    header {
-      background-color: #000;
-      padding: 1rem;
-    }
-    header nav {
-      display: flex; /* Flex layout for alignment */
-      justify-content: flex-start; /* Items to the left */
-      align-items: center;
-      gap: 1rem;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-      margin: 0;
-    }
-    nav ul li a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    /***************************************
-     * POSITION BUTTONS
-     ***************************************/
-    .position-buttons {
-      background-color: rgba(255,255,255,0.2); /* a semi-transparent layer */
-      padding: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-    .position-buttons button {
-      background-color: #4a90e2;
-      color: #fff;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-    }
-    .position-buttons button:hover {
-      background-color: #357ab7;
-    }
-
-    /***************************************
-     * MAIN TITLE
-     ***************************************/
-    .main-title {
-      padding: 1rem;
-      text-align: center;
-      background-color: rgba(255,255,255,0.7);
-      margin-bottom: 1rem;
-    }
-    .main-title h1 {
-      font-size: 2rem;
-      color: #333;
-    }
-
-    /***************************************
-     * SECTIONS
-     ***************************************/
-    section {
-      display: none; /* Hidden by default; toggled via showSection() */
-      background-color: #fff;
-      margin: 1rem auto;
-      padding: 1rem;
-      border-radius: 4px;
-      max-width: 1200px; /* Control overall width */
-    }
-    section h2 {
-      margin-bottom: 1rem;
-      color: #444;
-    }
-
-    /***************************************
-     * TABLES
-     ***************************************/
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    table th, table td {
-      border: 1px solid #ccc;
-      padding: 0.75rem 1rem;
-      text-align: left;
-    }
-    table th {
-      background-color: #e6e6e6;
-      font-weight: bold;
-    }
-
-  </style>
-
-  <!-- Include Papa Parse via CDN -->
+  <meta charset="UTF-8" />
+  <title>Raider TC - Stats</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Include Papa Parse for CSV reading -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 </head>
 <body>
@@ -130,10 +13,9 @@
   <header>
     <nav>
       <ul>
-        <!-- Removed "Enroll Now," "Schoolbooks," and "Rulebook" links -->
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Records</a></li>
-        <li><a href="#">Stats</a></li>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="scores.html">Scores</a></li>
+        <li><a href="index.html">Stats</a></li>
       </ul>
     </nav>
   </header>
@@ -148,7 +30,7 @@
 
   <!-- MAIN TITLE -->
   <div class="main-title">
-    <h1>AFS Stats</h1>
+    <h1>Raider TC Stats</h1>
   </div>
 
   <!-- QB SECTION -->
@@ -188,7 +70,7 @@
   </section>
 
   <script>
-    // Replace these with your own published CSV links:
+    // CSV Links (Update with correct published links)
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
@@ -196,59 +78,45 @@
 
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On page load, build all four tables and show QB by default
+    // On page load, fetch data and show QB section by default
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildTable(CSV_QB_LINK, "qb-table");
       fetchAndBuildTable(CSV_WR_LINK, "wr-table");
       fetchAndBuildTable(CSV_DB_LINK, "db-table");
       fetchAndBuildTable(CSV_DE_LINK, "de-table");
+
       showSection("qb-section");
     });
 
-    /**
-     * showSection - Hides all sections, shows only the requested one
-     * @param {string} sectionId
-     */
+    // Function to switch visible sections
     function showSection(sectionId) {
       sections.forEach(id => {
         document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
       });
     }
 
-    /**
-     * fetchAndBuildTable - Dynamically builds columns & rows from CSV,
-     * adds a "Rank" column and converts "RATING" numbers into stars.
-     *
-     * @param {string} csvLink - The published CSV link
-     * @param {string} tableId - The ID of the <table> element
-     */
+    // Fetch and build a table dynamically
     function fetchAndBuildTable(csvLink, tableId) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
-          // Parse CSV with Papa Parse
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;           // array of row objects
-          const fields = results.meta.fields;  // array of column headers
+          const data = results.data;
+          const fields = results.meta.fields;
 
-          // Get table references
           const table = document.getElementById(tableId);
           const thead = table.querySelector("thead");
           const tbody = table.querySelector("tbody");
 
-          // Clear any existing content
           thead.innerHTML = "";
           tbody.innerHTML = "";
 
-          // Build the header row (including a "Rank" column)
+          // Build table headers
           const headerRow = document.createElement("tr");
-
-          // Rank column
           const rankTh = document.createElement("th");
           rankTh.textContent = "Rank";
           headerRow.appendChild(rankTh);
 
-          // For each field in the CSV, create a <th>
           fields.forEach(fieldName => {
             const th = document.createElement("th");
             th.textContent = fieldName;
@@ -260,12 +128,10 @@
           data.forEach((rowObj, index) => {
             const tr = document.createElement("tr");
 
-            // Rank cell
             const rankTd = document.createElement("td");
             rankTd.textContent = index + 1;
             tr.appendChild(rankTd);
 
-            // For each CSV column, create a cell
             fields.forEach(fieldName => {
               const td = document.createElement("td");
               const rawValue = rowObj[fieldName] || "";
