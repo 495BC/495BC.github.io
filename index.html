@@ -42,67 +42,13 @@
       background-color: rgba(128, 128, 128, 0.4);
       padding: 1rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
+      margin-left: 10px;
       flex-wrap: wrap;
     }
 
-    /* Search Bar styling: Transparent background, handwritten placeholder */
-    .search-form {
-      display: inline-block;
-      font-size: 0;
-    }
-    .search-form form {
-      background: transparent;
-      border: none;
-      display: inline-block;
-      padding: 0;
-      position: relative;
-      z-index: 1;
-    }
-    .search-form input {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid #ccc;
-      border-radius: 0;
-      color: #fff;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 16px;
-      height: 40px;
-      padding: 0 10px;
-      width: 250px;
-      outline: none;
-    }
-    .search-form input::placeholder {
-      color: #ccc;
-      font-style: italic;
-    }
-    .search-form input:focus {
-      border-bottom-color: #fff;
-      box-shadow: 0 2px 0 #fff;
-    }
-    .search-form button {
-      background: transparent;
-      border: 2px solid transparent;
-      color: #fff;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 16px;
-      height: 40px;
-      padding: 0 15px;
-      cursor: pointer;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .search-form button:hover,
-    .search-form button:focus {
-      border-color: #fff;
-      box-shadow: 0 0 10px rgba(255,255,255,0.8);
-    }
-    .search-form button:active {
-      box-shadow: none;
-    }
-
-    /* Category Buttons on right side */
+    /* Category Buttons on left side */
     .category-buttons {
       display: flex;
       gap: 1rem;
@@ -148,6 +94,7 @@
       border: 1px solid #ccc;
       padding: 0.75rem 1rem;
       text-align: left;
+      background-color: #f9f9f9; /* Default background */
     }
     table th {
       background-color: #e6e6e6;
@@ -165,16 +112,8 @@
     <h1 id="title-text">Raider TC Stats</h1>
   </div>
 
-  <!-- NAVIGATION BAR -->
+  <!-- NAVIGATION BAR with Category Buttons on Left -->
   <div class="nav-bar">
-    <!-- Search Bar -->
-    <div class="search-form">
-      <form action="" method="get" onsubmit="return false;">
-        <input id="search-input" type="search" placeholder="Search for players here">
-        <button type="submit">Search</button>
-      </form>
-    </div>
-    <!-- Category Buttons -->
     <div class="category-buttons">
       <button onclick="showSection('qb-section')">QB</button>
       <button onclick="showSection('wr-section')">WR</button>
@@ -220,6 +159,14 @@
   </section>
 
   <script>
+    // Ask for image links for top three rows.
+    // Replace these placeholder URLs with your actual image links.
+    const TOP3_BG_IMAGES = [
+      "https://example.com/image1.jpg", // Rank 1 background image
+      "https://example.com/image2.jpg", // Rank 2 background image
+      "https://example.com/image3.jpg"  // Rank 3 background image
+    ];
+
     // CSV links – replace with your published CSV URLs
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
@@ -227,7 +174,6 @@
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSODRpqky0PxX7b2epxF2a6GFy7FyEKk7onSn96X9FjHSZXv03nE9zxQC6s35AiM1q8W7d1zrowdurX/pub?output=csv";
 
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
-    let currentSectionId = "qb-section";
 
     // Build all tables on page load and show QB by default
     window.addEventListener('DOMContentLoaded', () => {
@@ -249,51 +195,18 @@
 
     /**
      * showSection: Hides all sections and shows only the requested one.
-     * Also resets the search input.
      */
     function showSection(sectionId) {
-      currentSectionId = sectionId;
       sections.forEach(id => {
         document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
       });
-      document.getElementById("search-input").value = "";
-      filterTable("");
     }
-
-    /**
-     * filterTable: Filters the visible table's rows based on the search term in the USERNAME column.
-     */
-    function filterTable(searchTerm) {
-      const visibleSection = document.getElementById(currentSectionId);
-      if (!visibleSection) return;
-      const table = visibleSection.querySelector("table");
-      if (!table) return;
-      // Find the column index for USERNAME (case-insensitive)
-      const headerCells = table.querySelector("thead tr").children;
-      let usernameIndex = -1;
-      for (let i = 0; i < headerCells.length; i++) {
-        if (headerCells[i].textContent.toUpperCase() === "USERNAME") {
-          usernameIndex = i;
-          break;
-        }
-      }
-      if (usernameIndex === -1) return;
-      const rows = table.querySelectorAll("tbody tr");
-      rows.forEach(row => {
-        const cellText = row.children[usernameIndex].textContent.toLowerCase();
-        row.style.display = cellText.includes(searchTerm) ? "" : "none";
-      });
-    }
-
-    // Listen for input events on the search bar
-    document.getElementById("search-input").addEventListener("input", function() {
-      const searchValue = this.value.trim().toLowerCase();
-      filterTable(searchValue);
-    });
 
     /**
      * fetchAndBuildTable: Builds table columns & rows from CSV,
-     * adds a "Rank" column, converts "RATING" numbers to stars, and hyperlinks "USERNAME" to Roblox.
+     * adds a "Rank" column, converts "RATING" numbers to stars,
+     * and displays USERNAME as plain text.
+     * For the top 3 rows (rank 1-3), applies a background image.
      */
     function fetchAndBuildTable(csvLink, tableId) {
       fetch(csvLink)
@@ -329,22 +242,24 @@
             rankTd.textContent = index + 1;
             tr.appendChild(rankTd);
 
+            // If this is one of the top 3 rows, set a background image
+            if (index < 3 && TOP3_BG_IMAGES[index]) {
+              tr.style.backgroundImage = `url(${TOP3_BG_IMAGES[index]})`;
+              tr.style.backgroundSize = "cover";
+              tr.style.backgroundRepeat = "no-repeat";
+            }
+
             fields.forEach(fieldName => {
               const td = document.createElement("td");
               const rawValue = rowObj[fieldName] || "";
 
-              // Convert RATING numbers to stars
               if (fieldName.toUpperCase() === "RATING") {
                 const ratingValue = parseInt(rawValue, 10) || 0;
                 td.textContent = "⭐".repeat(ratingValue);
               }
-              // Hyperlink USERNAME to Roblox profile
+              // Display USERNAME as plain text (remove hyperlink)
               else if (fieldName.toUpperCase() === "USERNAME") {
-                const a = document.createElement("a");
-                a.href = "https://www.roblox.com/users/" + encodeURIComponent(rawValue) + "/profile";
-                a.textContent = rawValue;
-                a.target = "_blank";
-                td.appendChild(a);
+                td.textContent = rawValue;
               } else {
                 td.textContent = rawValue;
               }
