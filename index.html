@@ -31,9 +31,9 @@
       color: #333;
     }
 
-    /* NAVIGATION BAR: grey background with search on left and buttons on right */
+    /* NAVIGATION BAR: semi-transparent grey background with search on left and buttons on right */
     .nav-bar {
-      background-color: #808080;
+      background-color: rgba(128, 128, 128, 0.4); /* 40% opacity */
       padding: 1rem;
       display: flex;
       justify-content: space-between;
@@ -74,8 +74,8 @@
     .search-form input:focus {
       animation: glow 800ms ease-out infinite alternate;
       background: linear-gradient(#333933, #222922);
-      border-color: #393;
-      box-shadow: 0 0 5px rgba(0,255,0,0.2), inset 0 0 5px rgba(0,255,0,0.1), 0 2px 0 #000;
+      border-color: #fff;
+      box-shadow: 0 0 5px rgba(255,255,255,0.2), inset 0 0 5px rgba(255,255,255,0.1), 0 2px 0 #000;
       color: #efe;
     }
     .search-form button {
@@ -104,12 +104,12 @@
     }
     @keyframes glow {
       0% {
-        border-color: #393;
-        box-shadow: 0 0 5px rgba(0,255,0,0.2), inset 0 0 5px rgba(0,255,0,0.1), 0 2px 0 #000;
+        border-color: #fff;
+        box-shadow: 0 0 5px rgba(255,255,255,0.2), inset 0 0 5px rgba(255,255,255,0.1), 0 2px 0 #000;
       }
       100% {
-        border-color: #6f6;
-        box-shadow: 0 0 20px rgba(0,255,0,0.6), inset 0 0 10px rgba(0,255,0,0.4), 0 2px 0 #000;
+        border-color: #fff;
+        box-shadow: 0 0 20px rgba(255,255,255,0.6), inset 0 0 10px rgba(255,255,255,0.4), 0 2px 0 #000;
       }
     }
 
@@ -141,7 +141,7 @@
       margin: 1rem auto;
       padding: 1rem;
       border-radius: 4px;
-      max-width: 90%; /* Container now restricted */
+      max-width: 90%; /* Proportional container */
       overflow-x: auto;
     }
     section h2 {
@@ -181,7 +181,7 @@
     <!-- Search Bar -->
     <div class="search-form">
       <form action="" method="get">
-        <input type="search" placeholder="What are you looking for?">
+        <input id="search-input" type="search" placeholder="What are you looking for?">
         <button type="submit">Search</button>
       </form>
     </div>
@@ -238,6 +238,7 @@
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSODRpqky0PxX7b2epxF2a6GFy7FyEKk7onSn96X9FjHSZXv03nE9zxQC6s35AiM1q8W7d1zrowdurX/pub?output=csv";
 
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
+    let currentSectionId = "qb-section";
 
     // Build all tables on page load and show QB by default
     window.addEventListener('DOMContentLoaded', () => {
@@ -252,10 +253,44 @@
      * showSection: Hides all sections, shows only the requested one.
      */
     function showSection(sectionId) {
+      currentSectionId = sectionId;
       sections.forEach(id => {
         document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
       });
+      // Reset search input when switching sections
+      document.getElementById("search-input").value = "";
+      filterTable(""); 
     }
+
+    /**
+     * filterTable: Filters the visible table's rows by the search term in the USERNAME column.
+     */
+    function filterTable(searchTerm) {
+      const visibleSection = document.getElementById(currentSectionId);
+      if (!visibleSection) return;
+      const table = visibleSection.querySelector("table");
+      if (!table) return;
+      const headerCells = table.querySelector("thead tr").children;
+      let usernameIndex = -1;
+      for (let i = 0; i < headerCells.length; i++) {
+        if (headerCells[i].textContent.toUpperCase() === "USERNAME") {
+          usernameIndex = i;
+          break;
+        }
+      }
+      if (usernameIndex === -1) return;
+      const rows = table.querySelectorAll("tbody tr");
+      rows.forEach(row => {
+        const cellText = row.children[usernameIndex].textContent.toLowerCase();
+        row.style.display = cellText.includes(searchTerm) ? "" : "none";
+      });
+    }
+
+    // Listen for input events on the search bar
+    document.getElementById("search-input").addEventListener("input", function() {
+      const searchValue = this.value.trim().toLowerCase();
+      filterTable(searchValue);
+    });
 
     /**
      * fetchAndBuildTable: Builds columns & rows from CSV,
