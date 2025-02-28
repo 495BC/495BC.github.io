@@ -10,11 +10,16 @@
       padding: 0;
       box-sizing: border-box;
     }
+    /* 
+      Gradient background from a dark blue (#0B3D91) at top 
+      to a lighter blue (#E6F0FF) at bottom. 
+      Adjust colors if desired.
+    */
     body {
       font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
       color: #333;
-      padding: 0; /* We'll handle spacing in sections */
+      background: linear-gradient(to bottom, #0B3D91, #E6F0FF);
+      min-height: 100vh; /* ensure gradient covers full screen */
     }
 
     /***************************************
@@ -25,9 +30,10 @@
       padding: 1rem;
     }
     header nav {
-      display: flex;             /* Flex layout for alignment */
-      justify-content: space-between;
+      display: flex; /* Flex layout for alignment */
+      justify-content: flex-start; /* Items to the left */
       align-items: center;
+      gap: 1rem;
     }
     nav ul {
       list-style: none;
@@ -40,24 +46,12 @@
       text-decoration: none;
       font-weight: bold;
     }
-    .enroll-button {
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 4px;
-    }
-    .enroll-button:hover {
-      background-color: #0056b3;
-    }
 
     /***************************************
      * POSITION BUTTONS
      ***************************************/
     .position-buttons {
-      background-color: #e6f0ff; /* Light bluish background, tweak as you like */
+      background-color: rgba(255,255,255,0.2); /* a semi-transparent layer */
       padding: 1rem;
       display: flex;
       justify-content: center;
@@ -83,7 +77,7 @@
     .main-title {
       padding: 1rem;
       text-align: center;
-      background-color: #fff;
+      background-color: rgba(255,255,255,0.7);
       margin-bottom: 1rem;
     }
     .main-title h1 {
@@ -136,13 +130,11 @@
   <header>
     <nav>
       <ul>
+        <!-- Removed "Enroll Now," "Schoolbooks," and "Rulebook" links -->
         <li><a href="#">Home</a></li>
-        <li><a href="#">Scores</a></li>
+        <li><a href="#">Records</a></li>
         <li><a href="#">Stats</a></li>
-        <li><a href="#">Rulebook</a></li>
-        <li><a href="#">Schoolbooks</a></li>
       </ul>
-      <button class="enroll-button">Enroll Now</button>
     </nav>
   </header>
 
@@ -202,7 +194,6 @@
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSODRpqky0PxX7b2epxF2a6GFy7FyEKk7onSn96X9FjHSZXv03nE9zxQC6s35AiM1q8W7d1zrowdurX/pub?output=csv";
 
-    // We'll keep track of which sections exist
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
     // On page load, build all four tables and show QB by default
@@ -211,8 +202,6 @@
       fetchAndBuildTable(CSV_WR_LINK, "wr-table");
       fetchAndBuildTable(CSV_DB_LINK, "db-table");
       fetchAndBuildTable(CSV_DE_LINK, "de-table");
-
-      // Show QB section by default
       showSection("qb-section");
     });
 
