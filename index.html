@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Raider TC - Stats</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Include Papa Parse for CSV reading -->
+  <link rel="stylesheet" href="styles.css">
+  <script src="scripts.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 </head>
 <body>
 
-  <!-- HEADER / NAV -->
+  <!-- HEADER -->
   <header>
     <nav>
       <ul>
         <li><a href="home.html">Home</a></li>
         <li><a href="scores.html">Scores</a></li>
-        <li><a href="index.html">Stats</a></li>
+        <li><a href="index.html" class="active">Stats</a></li>
       </ul>
     </nav>
   </header>
@@ -33,7 +34,7 @@
     <h1>Raider TC Stats</h1>
   </div>
 
-  <!-- QB SECTION -->
+  <!-- Stat Sections -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
     <table id="qb-table">
@@ -42,7 +43,6 @@
     </table>
   </section>
 
-  <!-- WR SECTION -->
   <section id="wr-section">
     <h2>Wide Receiver Stats</h2>
     <table id="wr-table">
@@ -51,7 +51,6 @@
     </table>
   </section>
 
-  <!-- DB SECTION -->
   <section id="db-section">
     <h2>Defensive Back Stats</h2>
     <table id="db-table">
@@ -60,7 +59,6 @@
     </table>
   </section>
 
-  <!-- DE SECTION -->
   <section id="de-section">
     <h2>Defensive End Stats</h2>
     <table id="de-table">
@@ -68,91 +66,6 @@
       <tbody></tbody>
     </table>
   </section>
-
-  <script>
-    // CSV Links (Update with correct published links)
-    const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
-    const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
-    const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
-    const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSODRpqky0PxX7b2epxF2a6GFy7FyEKk7onSn96X9FjHSZXv03nE9zxQC6s35AiM1q8W7d1zrowdurX/pub?output=csv";
-
-    const sections = ["qb-section", "wr-section", "db-section", "de-section"];
-
-    // On page load, fetch data and show QB section by default
-    window.addEventListener('DOMContentLoaded', () => {
-      fetchAndBuildTable(CSV_QB_LINK, "qb-table");
-      fetchAndBuildTable(CSV_WR_LINK, "wr-table");
-      fetchAndBuildTable(CSV_DB_LINK, "db-table");
-      fetchAndBuildTable(CSV_DE_LINK, "de-table");
-
-      showSection("qb-section");
-    });
-
-    // Function to switch visible sections
-    function showSection(sectionId) {
-      sections.forEach(id => {
-        document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
-      });
-    }
-
-    // Fetch and build a table dynamically
-    function fetchAndBuildTable(csvLink, tableId) {
-      fetch(csvLink)
-        .then(response => response.text())
-        .then(csvText => {
-          const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;
-          const fields = results.meta.fields;
-
-          const table = document.getElementById(tableId);
-          const thead = table.querySelector("thead");
-          const tbody = table.querySelector("tbody");
-
-          thead.innerHTML = "";
-          tbody.innerHTML = "";
-
-          // Build table headers
-          const headerRow = document.createElement("tr");
-          const rankTh = document.createElement("th");
-          rankTh.textContent = "Rank";
-          headerRow.appendChild(rankTh);
-
-          fields.forEach(fieldName => {
-            const th = document.createElement("th");
-            th.textContent = fieldName;
-            headerRow.appendChild(th);
-          });
-          thead.appendChild(headerRow);
-
-          // Build table rows
-          data.forEach((rowObj, index) => {
-            const tr = document.createElement("tr");
-
-            const rankTd = document.createElement("td");
-            rankTd.textContent = index + 1;
-            tr.appendChild(rankTd);
-
-            fields.forEach(fieldName => {
-              const td = document.createElement("td");
-              const rawValue = rowObj[fieldName] || "";
-
-              // Convert RATING number to stars
-              if (fieldName.toUpperCase() === "RATING") {
-                const ratingValue = parseInt(rawValue, 10) || 0;
-                td.textContent = "⭐".repeat(ratingValue);
-              } else {
-                td.textContent = rawValue;
-              }
-
-              tr.appendChild(td);
-            });
-
-            tbody.appendChild(tr);
-          });
-        })
-        .catch(err => console.error("Error fetching CSV:", err));
-    }
-  </script>
 
 </body>
 </html>
