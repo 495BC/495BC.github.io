@@ -20,7 +20,7 @@
       padding: 20px;
     }
 
-    /* MAIN TITLE - simple black background, no mouse gradient */
+    /* MAIN TITLE - simple black background */
     .main-title {
       background-color: #000;
       text-align: center;
@@ -185,7 +185,20 @@
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      transition: color 0.3s, box-shadow 0.3s;
     }
+    /* Specific QB styling: 16:9 ratio and color transitions */
+    #qb-container .player-row {
+      aspect-ratio: 16 / 9;
+      color: #ccc; /* default text color */
+      -webkit-box-reflect: below 1px linear-gradient(transparent, rgba(204, 204, 204, 0.5));
+    }
+    #qb-container .player-row:hover {
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+      -webkit-box-reflect: below 1px linear-gradient(transparent, #fff);
+    }
+
     /* The rank cell for each row, with special borders for top 1/2/3 */
     .player-rank {
       width: 60px;
