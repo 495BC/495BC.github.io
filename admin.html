@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raider TC - Admin Panel</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="scripts.js" defer></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="scores.html">Scores</a></li>
+        <li><a href="index.html">Stats</a></li>
+        <li><a href="#" onclick="logoutAdmin()">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- CHECK ADMIN STATUS -->
+  <script>
+    if (localStorage.getItem("admin") !== "true") {
+      alert("Access Denied: Admins Only");
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <!-- ADMIN DASHBOARD -->
+  <div class="main-title">
+    <h1>Admin Panel - Add New Score</h1>
+  </div>
+
+  <form id="score-form" class="admin-form">
+    <label for="home-team">Home Team Name:</label>
+    <input type="text" id="home-team" required>
+
+    <label for="home-score">Home Team Score:</label>
+    <input type="number" id="home-score" required>
+
+    <label for="away-team">Away Team Name:</label>
+    <input type="text" id="away-team" required>
+
+    <label for="away-score">Away Team Score:</label>
+    <input type="number" id="away-score" required>
+
+    <button type="submit">Submit Score</button>
+  </form>
+
+</body>
+</html>
