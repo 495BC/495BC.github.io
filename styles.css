@@ -1,4 +1,4 @@
-/* Reset & General Styles */
+/* General Reset */
 * {
   margin: 0;
   padding: 0;
@@ -6,158 +6,128 @@
 }
 
 body {
-  font-family: 'Arial', sans-serif;
-  background: #f8f9fa; /* Light neutral background */
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #003366, #e6f0ff);
   color: #333;
   padding: 0;
 }
 
-/***************************************
- * HEADER / NAV
- ***************************************/
+/* Header / Navigation */
 header {
   background-color: #000;
   padding: 1rem;
-  position: fixed;
-  top: 0;
+  position: relative;
   width: 100%;
   z-index: 1000;
 }
-header nav {
-  display: flex;
-  justify-content: center;
-}
+
 nav ul {
   list-style: none;
   display: flex;
-  gap: 1.5rem;
+  justify-content: left;
+  gap: 1rem;
 }
+
 nav ul li a {
   color: #fff;
   text-decoration: none;
-  font-size: 1.2rem;
   font-weight: bold;
-  transition: color 0.3s ease;
-}
-nav ul li a:hover {
-  color: #4a90e2;
+  padding: 0.5rem 1rem;
 }
 
-/***************************************
- * POSITION BUTTONS
- ***************************************/
+/* Position Buttons */
 .position-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 100px 0 20px 0; /* Space below navbar */
-}
-.position-buttons button {
-  background: #4a90e2;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.position-buttons button:hover {
-  background: #357ab7;
-  transform: scale(1.05);
-}
-
-/***************************************
- * PAGE BACKGROUNDS (PLAIN BLUE-WHITE)
- ***************************************/
-.home-page,
-.records-page,
-.stats-page {
-  background: white;  /* Plain white */
-  min-height: 100vh;
-  padding-top: 70px; /* Prevent overlap with fixed navbar */
-}
-
-/***************************************
- * MAIN TITLE (PREVENT OVERLAP)
- ***************************************/
-.main-title {
   text-align: center;
-  margin-top: 100px; /* Ensures spacing below nav */
-}
-.main-title h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #333;
-  text-shadow: none;
+  padding: 1rem;
+  background-color: #004080;
 }
 
-/***************************************
- * TABLES
- ***************************************/
+.position-buttons button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.position-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* Main Title */
+.main-title {
+  padding: 1rem;
+  text-align: center;
+  background-color: #fff;
+  margin-bottom: 1rem;
+}
+
+.main-title h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+/* Sections */
+section {
+  display: none;
+  background-color: #fff;
+  margin: 1rem auto;
+  padding: 1rem;
+  border-radius: 4px;
+  max-width: 1200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+/* Tables */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
-  background: white;
+  background-color: #e6f0ff;
+  border-radius: 8px;
+  overflow: hidden;
 }
+
 table th, table td {
-  padding: 12px;
+  border: 1px solid #ccc;
+  padding: 0.75rem 1rem;
   text-align: left;
-  font-size: 1rem;
 }
+
 table th {
-  background: #4a90e2;
+  background-color: #003366;
   color: white;
   font-weight: bold;
-  text-transform: uppercase;
 }
+
 table tr:nth-child(even) {
-  background: #f2f2f2; /* Lighter row for contrast */
+  background-color: #d6e0f5;
 }
+
 table tr:hover {
-  background: #e6e6e6;
-  transition: background 0.3s ease;
+  background-color: #b3c6ff;
 }
 
-/***************************************
- * ADMIN BUTTON & LOGIN BUTTON
- ***************************************/
-.admin-section {
-  display: none; /* Hidden by default */
-  text-align: center;
-  margin-top: 20px;
-}
-
-#admin-button {
-  display: none; /* Hidden unless logged in */
-  background-color: red;
+/* Login & Admin Buttons */
+.admin-button, .login-button, .logout-button {
+  background-color: #ff5733;
   color: white;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 6px;
+  border: none;
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#admin-button:hover {
-  background-color: darkred;
-}
-
-#login-button {
-  display: block;
-  background-color: green;
-  color: white;
-  padding: 10px 20px;
-  font-size: 1rem;
   font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
-#login-button:hover {
-  background-color: darkgreen;
+.admin-button:hover, .login-button:hover, .logout-button:hover {
+  background-color: #c70039;
 }
