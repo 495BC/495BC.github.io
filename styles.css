@@ -7,8 +7,8 @@
 
 body {
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom, #1e3c72, #2a5298); /* Dark to light blue gradient */
-  color: #fff;
+  background: #f8f9fa; /* Light neutral background */
+  color: #333;
   padding: 0;
 }
 
@@ -69,35 +69,28 @@ nav ul li a:hover {
 }
 
 /***************************************
- * MAIN TITLE
+ * PAGE BACKGROUNDS (PLAIN BLUE-WHITE)
+ ***************************************/
+.home-page,
+.records-page,
+.stats-page {
+  background: white;  /* Plain white */
+  min-height: 100vh;
+  padding-top: 70px; /* Prevent overlap with fixed navbar */
+}
+
+/***************************************
+ * MAIN TITLE (PREVENT OVERLAP)
  ***************************************/
 .main-title {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 100px; /* Ensures spacing below nav */
 }
 .main-title h1 {
   font-size: 2.5rem;
   font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/***************************************
- * SECTIONS
- ***************************************/
-section {
-  display: none; /* Hidden by default; toggled via showSection() */
-  background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
-  margin: 1rem auto;
-  padding: 1.5rem;
-  border-radius: 10px;
-  max-width: 1200px; /* Limit width */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px); /* Glass effect */
-}
-section h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  text-align: center;
+  color: #333;
+  text-shadow: none;
 }
 
 /***************************************
@@ -107,8 +100,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
-  border-radius: 10px;
-  overflow: hidden;
+  background: white;
 }
 table th, table td {
   padding: 12px;
@@ -122,9 +114,50 @@ table th {
   text-transform: uppercase;
 }
 table tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.15); /* Lighter row for contrast */
+  background: #f2f2f2; /* Lighter row for contrast */
 }
 table tr:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #e6e6e6;
   transition: background 0.3s ease;
+}
+
+/***************************************
+ * ADMIN BUTTON & LOGIN BUTTON
+ ***************************************/
+.admin-section {
+  display: none; /* Hidden by default */
+  text-align: center;
+  margin-top: 20px;
+}
+
+#admin-button {
+  display: none; /* Hidden unless logged in */
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#admin-button:hover {
+  background-color: darkred;
+}
+
+#login-button {
+  display: block;
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#login-button:hover {
+  background-color: darkgreen;
 }
