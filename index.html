@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AFS Stats - Dynamic Columns</title>
+  <title>AFS Stats - GitHub Pages</title>
   <style>
     /* Basic Reset & Body */
     * {
@@ -138,8 +138,8 @@
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
 
+    // On page load, build all four tables
     window.addEventListener('DOMContentLoaded', () => {
-      // Build each table dynamically
       fetchAndBuildTable(CSV_QB_LINK, "qb-table");
       fetchAndBuildTable(CSV_WR_LINK, "wr-table");
       fetchAndBuildTable(CSV_DB_LINK, "db-table");
@@ -147,72 +147,76 @@
     });
 
     /**
-     * fetchAndBuildTable - Dynamically builds columns & rows from CSV
+     * fetchAndBuildTable - Dynamically builds columns & rows from CSV,
+     * adding a "Rank" column and converting "RATING" numbers into stars.
+     *
      * @param {string} csvLink - The published CSV link
      * @param {string} tableId - The ID of the <table> element
      */
-     function fetchAndBuildTable(csvLink, tableId) {
-  fetch(csvLink)
-    .then(response => response.text())
-    .then(csvText => {
-      // Parse CSV with Papa Parse
-      const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-      const data = results.data;               // array of row objects
-      const fields = results.meta.fields;      // array of column headers
+    function fetchAndBuildTable(csvLink, tableId) {
+      fetch(csvLink)
+        .then(response => response.text())
+        .then(csvText => {
+          // Parse CSV with Papa Parse
+          const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+          const data = results.data;           // array of row objects
+          const fields = results.meta.fields;  // array of column headers
 
-      // Get table references
-      const table = document.getElementById(tableId);
-      const thead = table.querySelector("thead");
-      const tbody = table.querySelector("tbody");
+          // Get table references
+          const table = document.getElementById(tableId);
+          const thead = table.querySelector("thead");
+          const tbody = table.querySelector("tbody");
 
-      // Clear any existing content
-      thead.innerHTML = "";
-      tbody.innerHTML = "";
+          // Clear any existing content
+          thead.innerHTML = "";
+          tbody.innerHTML = "";
 
-      // Build the header row (including a "Rank" column)
-      const headerRow = document.createElement("tr");
-      // Rank column
-      const rankTh = document.createElement("th");
-      rankTh.textContent = "Rank";
-      headerRow.appendChild(rankTh);
+          // Build the header row (including a "Rank" column)
+          const headerRow = document.createElement("tr");
+          
+          // Rank column
+          const rankTh = document.createElement("th");
+          rankTh.textContent = "Rank";
+          headerRow.appendChild(rankTh);
 
-      // For each field in the CSV, create a <th>
-      fields.forEach(fieldName => {
-        const th = document.createElement("th");
-        th.textContent = fieldName;
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
+          // For each field in the CSV, create a <th>
+          fields.forEach(fieldName => {
+            const th = document.createElement("th");
+            th.textContent = fieldName;
+            headerRow.appendChild(th);
+          });
+          thead.appendChild(headerRow);
 
-      // Build table rows
-      data.forEach((rowObj, index) => {
-        const tr = document.createElement("tr");
+          // Build table rows
+          data.forEach((rowObj, index) => {
+            const tr = document.createElement("tr");
 
-        // Rank cell
-        const rankTd = document.createElement("td");
-        rankTd.textContent = index + 1;
-        tr.appendChild(rankTd);
+            // Rank cell
+            const rankTd = document.createElement("td");
+            rankTd.textContent = index + 1;
+            tr.appendChild(rankTd);
 
-        // For each CSV column, create a cell
-        fields.forEach(fieldName => {
-          const td = document.createElement("td");
+            // For each CSV column, create a cell
+            fields.forEach(fieldName => {
+              const td = document.createElement("td");
+              const rawValue = rowObj[fieldName] || "";
 
-          // Convert RATING number to stars
-          if (fieldName === "RATING") {
-            let ratingValue = parseInt(rowObj[fieldName] || 0, 10);
-            td.textContent = "⭐".repeat(ratingValue); // Repeat the star symbol based on rating
-          } else {
-            td.textContent = rowObj[fieldName] || "";
-          }
+              // Convert RATING number to stars
+              if (fieldName.toUpperCase() === "RATING") {
+                const ratingValue = parseInt(rawValue, 10) || 0;
+                td.textContent = "⭐".repeat(ratingValue);
+              } else {
+                td.textContent = rawValue;
+              }
 
-          tr.appendChild(td);
-        });
+              tr.appendChild(td);
+            });
 
-        tbody.appendChild(tr);
-      });
-    })
-    .catch(err => console.error("Error fetching CSV:", err));
-}
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => console.error("Error fetching CSV:", err));
+    }
   </script>
 
 </body>
