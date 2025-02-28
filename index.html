@@ -45,7 +45,7 @@
     }
 
     /************************************************
-     * NEON BUTTON STYLES (adapted from your snippet)
+     * NEON BUTTON STYLES WITH CUSTOM COLORS
      ************************************************/
     .category-buttons {
       display: flex;
@@ -55,7 +55,6 @@
       position: relative;
       display: inline-block;
       padding: 25px 30px;
-      color: #03e9f4;
       text-decoration: none;
       text-transform: uppercase;
       transition: 0.5s;
@@ -64,15 +63,30 @@
       font-weight: bold;
       font-size: 1rem;
     }
+    /* Default hover uses currentColor for glow */
     .category-buttons a:hover {
-      background: #03e9f4;
+      background: currentColor;
       color: #050801;
-      box-shadow: 0 0 5px #03e9f4,
-                  0 0 25px #03e9f4,
-                  0 0 50px #03e9f4,
-                  0 0 200px #03e9f4;
+      box-shadow: 0 0 5px currentColor,
+                  0 0 25px currentColor,
+                  0 0 50px currentColor,
+                  0 0 200px currentColor;
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
+    /* Custom Colors for Each Button */
+    .category-buttons a.qb {
+      color: #8A2BE2; /* Purple */
+    }
+    .category-buttons a.wr {
+      color: #03e9f4; /* Blue */
+    }
+    .category-buttons a.db {
+      color: #8B0000; /* Dark red */
+    }
+    .category-buttons a.de {
+      color: #FFA500; /* Orange */
+    }
+    /* Animated Neon Borders using currentColor */
     .category-buttons a span {
       position: absolute;
       display: block;
@@ -80,7 +94,7 @@
     .category-buttons a span:nth-child(1) {
       top: 0; left: 0;
       width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, #03e9f4);
+      background: linear-gradient(90deg, transparent, currentColor);
       animation: animate1 1s linear infinite;
     }
     @keyframes animate1 {
@@ -90,7 +104,7 @@
     .category-buttons a span:nth-child(2) {
       top: -100%; right: 0;
       width: 2px; height: 100%;
-      background: linear-gradient(180deg, transparent, #03e9f4);
+      background: linear-gradient(180deg, transparent, currentColor);
       animation: animate2 1s linear infinite;
       animation-delay: 0.25s;
     }
@@ -101,7 +115,7 @@
     .category-buttons a span:nth-child(3) {
       bottom: 0; right: 0;
       width: 100%; height: 2px;
-      background: linear-gradient(270deg, transparent, #03e9f4);
+      background: linear-gradient(270deg, transparent, currentColor);
       animation: animate3 1s linear infinite;
       animation-delay: 0.5s;
     }
@@ -112,7 +126,7 @@
     .category-buttons a span:nth-child(4) {
       bottom: -100%; left: 0;
       width: 2px; height: 100%;
-      background: linear-gradient(360deg, transparent, #03e9f4);
+      background: linear-gradient(360deg, transparent, currentColor);
       animation: animate4 1s linear infinite;
       animation-delay: 0.75s;
     }
@@ -141,7 +155,7 @@
     .list-container {
       display: flex;
       flex-direction: column;
-      gap: 10px; /* spacing between heading row & player rows */
+      gap: 10px;
     }
 
     /* A "heading row" with columns labeled */
@@ -157,7 +171,7 @@
       text-align: left;
       padding: 0 10px;
     }
-    /* rank heading narrower */
+    /* Rank heading narrower */
     .heading-cell.rank-cell {
       width: 60px;
       flex-shrink: 0;
@@ -210,19 +224,19 @@
   <!-- NAV BAR with Neon Buttons -->
   <div class="nav-bar">
     <div class="category-buttons">
-      <a href="#" onclick="showSection('qb-section')">
+      <a href="#" onclick="showSection('qb-section')" class="qb">
         <span></span><span></span><span></span><span></span>
         QB
       </a>
-      <a href="#" onclick="showSection('wr-section')">
+      <a href="#" onclick="showSection('wr-section')" class="wr">
         <span></span><span></span><span></span><span></span>
         WR
       </a>
-      <a href="#" onclick="showSection('db-section')">
+      <a href="#" onclick="showSection('db-section')" class="db">
         <span></span><span></span><span></span><span></span>
         DB
       </a>
-      <a href="#" onclick="showSection('de-section')">
+      <a href="#" onclick="showSection('de-section')" class="de">
         <span></span><span></span><span></span><span></span>
         DE
       </a>
@@ -284,7 +298,7 @@
      * fetchAndBuildList:
      *  - Builds a "heading row" with "Rank" + field names
      *  - Creates a "player-row" for each CSV row
-     *  - For top 1/2/3, sets gold/silver/bronze border
+     *  - For top 1/2/3, sets gold/silver/bronze border on the rank cell
      *  - Converts "RATING" to stars
      */
     function fetchAndBuildList(csvLink, containerId) {
