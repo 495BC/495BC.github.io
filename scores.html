@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Raiders TC Record</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Additional styling specific to this page, if needed */
+    .login-form, .score-form {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 300px;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .score-list {
+      margin-top: 1rem;
+    }
+    .score-item {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    .score-item span {
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scores.html">Scores</a></li>
+        <li><a href="stats.html">Stats</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Scores</h1>
+
+    <!-- Login Form -->
+    <div class="login-form" id="loginForm">
+      <label>Username:</label>
+      <input type="text" id="username" />
+      <label>Password:</label>
+      <input type="password" id="password" />
+      <button onclick="attemptLogin()">Login</button>
+      <p id="loginError" style="color:red;"></p>
+    </div>
+
+    <!-- Admin Button & Score Form (hidden by default) -->
+    <button id="addScoreBtn" class="hidden" onclick="toggleScoreForm()">Add New Score</button>
+
+    <form id="scoreForm" class="score-form hidden" onsubmit="addScore(event)">
+      <label>Home Team Name:</label>
+      <input type="text" id="homeTeam" required />
+
+      <label>Home Team Score:</label>
+      <input type="number" id="homeScore" required />
+
+      <label>Away Team Score:</label>
+      <input type="number" id="awayScore" required />
+
+      <label>Away Team Name:</label>
+      <input type="text" id="awayTeam" required />
+
+      <button type="submit">Submit Score</button>
+    </form>
+
+    <!-- Display the list of scores -->
+    <div class="score-list" id="scoreList"></div>
+  </div>
+
+  <script>
+    const ADMIN_USER = "495BC";
+    const ADMIN_PASS = "Kaufermann#123";
+
+    let isAdmin = false;
+
+    function attemptLogin() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const loginError = document.getElementById("loginError");
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        isAdmin = true;
+        // Hide login form, show "Add Score" button
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("addScoreBtn").classList.remove("hidden");
+        loginError.textContent = "";
+      } else {
+        isAdmin = false;
+        loginError.textContent = "Invalid credentials.";
+      }
+    }
+
+    function toggleScoreForm() {
+      const form = document.getElementById("scoreForm");
+      form.classList.toggle("hidden");
+    }
+
+    function addScore(e) {
+      e.preventDefault();
+      if (!isAdmin) return; // only admin can add
+
+      const homeTeam = document.getElementById("homeTeam").value;
+      const homeScore = document.getElementById("homeScore").value;
+      const awayScore = document.getElementById("awayScore").value;
+      const awayTeam = document.getElementById("awayTeam").value;
+
+      // Build the formatted score line
+      // Example: "**Washington** (7) - (37) **Mobile Flock**"
+      const scoreLine = `
+        <span><strong>${homeTeam}</strong> (${homeScore}) - (${awayScore}) <strong>${awayTeam}</strong></span>
+      `;
+
+      // Add it to the score list
+      const scoreListDiv = document.getElementById("scoreList");
+      const divItem = document.createElement("div");
+      divItem.className = "score-item";
+      divItem.innerHTML = scoreLine;
+      scoreListDiv.appendChild(divItem);
+
+      // Clear form
+      document.getElementById("scoreForm").reset();
+      toggleScoreForm();
+    }
+  </script>
+</body>
+</html>
