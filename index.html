@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Player Stats Page</title>
-  <!-- Include IBM Plex Sans from Google Fonts -->
+  <!-- IBM Plex Sans font -->
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* Basic Reset & Body */
@@ -19,9 +19,7 @@
       min-height: 100vh;
     }
 
-    /***************************************
-     * MAIN TITLE
-     ***************************************/
+    /* MAIN TITLE */
     .main-title {
       padding: 1rem;
       text-align: center;
@@ -33,52 +31,125 @@
       color: #333;
     }
 
-    /***************************************
-     * POSITION BUTTONS (Filter Controls)
-     ***************************************/
-    .position-buttons {
-      background-color: #808080; /* grey background */
-      color: #fff;
+    /* NAVIGATION BAR: grey background with search on left and buttons on right */
+    .nav-bar {
+      background-color: #808080;
       padding: 1rem;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Search Bar styling inspired by provided sample */
+    .search-form {
+      display: inline-block;
+      font-size: 0;
+    }
+    .search-form form {
+      background: linear-gradient(#1b1b1b, #111);
+      border: 1px solid #000;
+      border-radius: 5px;
+      box-shadow: inset 0 0 0 1px #272727;
+      display: inline-block;
+      padding: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .search-form input {
+      background: linear-gradient(#333, #222);
+      border: 1px solid #444;
+      border-radius: 5px 0 0 5px;
+      box-shadow: 0 2px 0 #000;
+      color: #888;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      height: 40px;
+      padding: 0 10px;
+      width: 200px;
+      outline: none;
+    }
+    .search-form input::-webkit-input-placeholder { color: #888; }
+    .search-form input:-moz-placeholder { color: #888; }
+    .search-form input:focus {
+      animation: glow 800ms ease-out infinite alternate;
+      background: linear-gradient(#333933, #222922);
+      border-color: #393;
+      box-shadow: 0 0 5px rgba(0,255,0,0.2), inset 0 0 5px rgba(0,255,0,0.1), 0 2px 0 #000;
+      color: #efe;
+    }
+    .search-form button {
+      background: linear-gradient(#333, #222);
+      border: 1px solid #444;
+      border-left-color: #000;
+      border-radius: 0 5px 5px 0;
+      box-shadow: 0 2px 0 #000;
+      color: #fff;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      height: 40px;
+      width: 80px;
+      cursor: pointer;
+      outline: none;
+    }
+    .search-form button:hover,
+    .search-form button:focus {
+      background: linear-gradient(#393939, #292929);
+      color: #5f5;
+    }
+    .search-form button:active {
+      box-shadow: 0 1px 0 #000, inset 1px 0 1px #222;
+      top: 1px;
+    }
+    @keyframes glow {
+      0% {
+        border-color: #393;
+        box-shadow: 0 0 5px rgba(0,255,0,0.2), inset 0 0 5px rgba(0,255,0,0.1), 0 2px 0 #000;
+      }
+      100% {
+        border-color: #6f6;
+        box-shadow: 0 0 20px rgba(0,255,0,0.6), inset 0 0 10px rgba(0,255,0,0.4), 0 2px 0 #000;
+      }
+    }
+
+    /* Category Buttons on right side */
+    .category-buttons {
+      display: flex;
       gap: 1rem;
     }
-    .position-buttons button {
+    .category-buttons button {
       background-color: #4a90e2;
       color: #fff;
       border: none;
-      padding: 1rem 2rem;  /* slightly larger */
+      padding: 1rem 2rem;
       cursor: pointer;
       font-weight: bold;
       border-radius: 4px;
       transition: transform 0.2s ease-in-out, background-color 0.2s;
       font-size: 1rem;
     }
-    .position-buttons button:hover {
-      transform: scale(1.1);  /* hover tween size-up */
+    .category-buttons button:hover {
+      transform: scale(1.1);
       background-color: #357ab7;
     }
 
-    /***************************************
-     * SECTIONS
-     ***************************************/
+    /* Sections */
     section {
-      display: none; /* Hidden by default; toggled via showSection() */
+      display: none;
       background-color: #fff;
       margin: 1rem auto;
       padding: 1rem;
       border-radius: 4px;
-      max-width: 1200px;
+      max-width: 90%; /* Container now restricted */
+      overflow-x: auto;
     }
     section h2 {
       margin-bottom: 1rem;
       color: #444;
     }
 
-    /***************************************
-     * TABLES
-     ***************************************/
+    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -105,12 +176,22 @@
     <h1>Raider TC Stats</h1>
   </div>
 
-  <!-- POSITION BUTTONS (Filter Controls) -->
-  <div class="position-buttons">
-    <button onclick="showSection('qb-section')">QB</button>
-    <button onclick="showSection('wr-section')">WR</button>
-    <button onclick="showSection('db-section')">DB</button>
-    <button onclick="showSection('de-section')">DE</button>
+  <!-- NAVIGATION BAR -->
+  <div class="nav-bar">
+    <!-- Search Bar -->
+    <div class="search-form">
+      <form action="" method="get">
+        <input type="search" placeholder="What are you looking for?">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <!-- Category Buttons -->
+    <div class="category-buttons">
+      <button onclick="showSection('qb-section')">QB</button>
+      <button onclick="showSection('wr-section')">WR</button>
+      <button onclick="showSection('db-section')">DB</button>
+      <button onclick="showSection('de-section')">DE</button>
+    </div>
   </div>
 
   <!-- QB SECTION -->
@@ -150,7 +231,7 @@
   </section>
 
   <script>
-    // Replace these with your own published CSV links:
+    // CSV links – replace with your published CSV URLs
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
@@ -158,7 +239,7 @@
 
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On page load, build all four tables and show QB by default
+    // Build all tables on page load and show QB by default
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildTable(CSV_QB_LINK, "qb-table");
       fetchAndBuildTable(CSV_WR_LINK, "wr-table");
@@ -168,8 +249,7 @@
     });
 
     /**
-     * showSection - Hides all sections, shows only the requested one
-     * @param {string} sectionId
+     * showSection: Hides all sections, shows only the requested one.
      */
     function showSection(sectionId) {
       sections.forEach(id => {
@@ -178,39 +258,29 @@
     }
 
     /**
-     * fetchAndBuildTable - Dynamically builds columns & rows from CSV,
-     * adds a "Rank" column, converts "RATING" numbers into stars, and hyperlinks usernames.
-     *
-     * @param {string} csvLink - The published CSV link
-     * @param {string} tableId - The ID of the <table> element
+     * fetchAndBuildTable: Builds columns & rows from CSV,
+     * adds a "Rank" column, converts "RATING" to stars, and hyperlinks "USERNAME" to Roblox.
      */
     function fetchAndBuildTable(csvLink, tableId) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
-          // Parse CSV with Papa Parse
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;           // array of row objects
-          const fields = results.meta.fields;  // array of column headers
+          const data = results.data;
+          const fields = results.meta.fields;
 
-          // Get table references
           const table = document.getElementById(tableId);
           const thead = table.querySelector("thead");
           const tbody = table.querySelector("tbody");
 
-          // Clear any existing content
           thead.innerHTML = "";
           tbody.innerHTML = "";
 
-          // Build the header row (including a "Rank" column)
+          // Create header row with extra "Rank" column
           const headerRow = document.createElement("tr");
-
-          // Rank column
           const rankTh = document.createElement("th");
           rankTh.textContent = "Rank";
           headerRow.appendChild(rankTh);
-
-          // For each field in the CSV, create a <th>
           fields.forEach(fieldName => {
             const th = document.createElement("th");
             th.textContent = fieldName;
@@ -218,26 +288,23 @@
           });
           thead.appendChild(headerRow);
 
-          // Build table rows
+          // Create table rows
           data.forEach((rowObj, index) => {
             const tr = document.createElement("tr");
-
-            // Rank cell
             const rankTd = document.createElement("td");
             rankTd.textContent = index + 1;
             tr.appendChild(rankTd);
 
-            // For each CSV column, create a cell
             fields.forEach(fieldName => {
               const td = document.createElement("td");
               const rawValue = rowObj[fieldName] || "";
 
-              // Convert RATING number to stars
+              // Convert RATING numbers to stars
               if (fieldName.toUpperCase() === "RATING") {
                 const ratingValue = parseInt(rawValue, 10) || 0;
                 td.textContent = "⭐".repeat(ratingValue);
               }
-              // Hyperlink USERNAME values to Roblox profile
+              // Hyperlink USERNAME to Roblox profile
               else if (fieldName.toUpperCase() === "USERNAME") {
                 const a = document.createElement("a");
                 a.href = "https://www.roblox.com/users/" + encodeURIComponent(rawValue) + "/profile";
@@ -247,10 +314,8 @@
               } else {
                 td.textContent = rawValue;
               }
-
               tr.appendChild(td);
             });
-
             tbody.appendChild(tr);
           });
         })
