@@ -74,18 +74,10 @@
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
     /* Custom Colors for Each Button */
-    .category-buttons a.qb {
-      color: #8A2BE2; /* Purple */
-    }
-    .category-buttons a.wr {
-      color: #03e9f4; /* Blue */
-    }
-    .category-buttons a.db {
-      color: #8B0000; /* Dark red */
-    }
-    .category-buttons a.de {
-      color: #FFA500; /* Orange */
-    }
+    .category-buttons a.qb { color: #8A2BE2; } /* Purple */
+    .category-buttons a.wr { color: #03e9f4; } /* Blue */
+    .category-buttons a.db { color: #8B0000; } /* Dark red */
+    .category-buttons a.de { color: #FFA500; } /* Orange */
     /* Animated Neon Borders using currentColor */
     .category-buttons a span {
       position: absolute;
@@ -155,7 +147,7 @@
     .list-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 5px;  /* reduced gap */
     }
 
     /* A "heading row" with columns labeled */
@@ -185,18 +177,19 @@
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      transition: color 0.3s, box-shadow 0.3s;
+      transition: color 0.3s ease, box-shadow 0.3s ease;
     }
-    /* Specific QB styling: 16:9 ratio and color transitions */
+    /* QB-specific styling: force 16:9 ratio, default light gray text with reflection,
+       and on hover transition to white with a gentler glow. */
     #qb-container .player-row {
       aspect-ratio: 16 / 9;
-      color: #ccc; /* default text color */
-      -webkit-box-reflect: below 1px linear-gradient(transparent, rgba(204, 204, 204, 0.5));
+      color: #ccc;
+      -webkit-box-reflect: below 1px linear-gradient(transparent, rgba(204,204,204,0.5));
     }
     #qb-container .player-row:hover {
       color: #fff;
-      box-shadow: 0 2px 4px rgba(255,255,255,0.2);
       -webkit-box-reflect: below 1px linear-gradient(transparent, #fff);
+      box-shadow: 0 2px 4px rgba(255,255,255,0.15);
     }
 
     /* The rank cell for each row, with special borders for top 1/2/3 */
