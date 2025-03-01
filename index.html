@@ -18,6 +18,7 @@
       color: #fff;
       min-height: 100vh;
       padding: 20px;
+      overflow-x: hidden;
     }
 
     /* MAIN TITLE - simple black background, no mouse gradient */
@@ -84,10 +85,10 @@
       color: #FFA500;
       --button-neon: #FFA500;
     }
-    /* On hover, force text (and reflection) to white and add glowing effect */
+    /* On hover, force text to white and add glowing effect */
     .category-buttons a:hover {
       background: var(--button-neon);
-      color: #fff; /* force text to white */
+      color: #fff;
       box-shadow: 0 0 5px var(--button-neon),
                   0 0 25px var(--button-neon),
                   0 0 50px var(--button-neon),
@@ -105,6 +106,9 @@
       padding: 1rem;
       border-radius: 4px;
       max-width: 90%;
+      /* Initially positioned offscreen left */
+      transform: translateX(-50px);
+      opacity: 0;
     }
     section h2 {
       margin-bottom: 1rem;
@@ -145,6 +149,8 @@
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      transform: translateX(-50px);
+      opacity: 0;
     }
     /* The rank cell for each row, with special borders for top 1/2/3 */
     .player-rank {
@@ -170,6 +176,24 @@
       border-radius: 5px;
       margin-right: 5px;
     }
+
+    /* ---------------- Animation Classes ---------------- */
+    /* Fade in from left */
+    .fade-in-left {
+      animation: fadeInLeft 0.5s ease forwards;
+    }
+    /* Fade out to left */
+    .fade-out-left {
+      animation: fadeOutLeft 0.5s ease forwards;
+    }
+    @keyframes fadeInLeft {
+      0% { opacity: 0; transform: translateX(-50px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeOutLeft {
+      0% { opacity: 1; transform: translateX(0); }
+      100% { opacity: 0; transform: translateX(-50px); }
+    }
   </style>
   <!-- Papa Parse via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
@@ -184,16 +208,16 @@
   <!-- NAV BAR with Neon Buttons -->
   <div class="nav-bar">
     <div class="category-buttons">
-      <a href="#" onclick="showSection('qb-section')" class="qb">
+      <a href="#" onclick="switchSection('qb-section')" class="qb">
         QB
       </a>
-      <a href="#" onclick="showSection('wr-section')" class="wr">
+      <a href="#" onclick="switchSection('wr-section')" class="wr">
         WR
       </a>
-      <a href="#" onclick="showSection('db-section')" class="db">
+      <a href="#" onclick="switchSection('db-section')" class="db">
         DB
       </a>
-      <a href="#" onclick="showSection('de-section')" class="de">
+      <a href="#" onclick="switchSection('de-section')" class="de">
         DE
       </a>
     </div>
@@ -234,28 +258,48 @@
 
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On page load, build all "lists" & show QB by default
+    // On page load, build all lists & fade in the QB section by default.
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container");
       fetchAndBuildList(CSV_WR_LINK, "wr-container");
       fetchAndBuildList(CSV_DB_LINK, "db-container");
       fetchAndBuildList(CSV_DE_LINK, "de-container");
-      showSection("qb-section");
+      // Initially show QB section with fade-in
+      let initialSection = document.getElementById("qb-section");
+      initialSection.style.display = "block";
+      initialSection.classList.add("fade-in-left");
     });
 
-    // showSection: Hides all sections, shows only the requested one
-    function showSection(sectionId) {
+    // switchSection handles fading out current section and fading in new one.
+    function switchSection(newSectionId) {
       sections.forEach(id => {
-        document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
+        let sectionEl = document.getElementById(id);
+        if (id === newSectionId) {
+          // If the target section is not visible, display and fade in.
+          sectionEl.style.display = "block";
+          sectionEl.classList.remove("fade-out-left");
+          sectionEl.classList.add("fade-in-left");
+        } else {
+          if (sectionEl.style.display === "block") {
+            // Fade out the currently visible section.
+            sectionEl.classList.remove("fade-in-left");
+            sectionEl.classList.add("fade-out-left");
+            sectionEl.addEventListener("animationend", function handler() {
+              sectionEl.style.display = "none";
+              sectionEl.classList.remove("fade-out-left");
+              sectionEl.removeEventListener("animationend", handler);
+            });
+          }
+        }
       });
     }
 
     /**
      * fetchAndBuildList:
-     *  - Builds a "heading row" with "Rank" + field names
-     *  - Creates a "player-row" for each CSV row
-     *  - For top 1/2/3, sets gold/silver/bronze border on the rank cell
-     *  - Converts "RATING" to stars
+     *  - Builds a "heading row" with "Rank" + field names.
+     *  - Creates a "player-row" for each CSV row.
+     *  - Applies a sequential fade-in animation from left.
+     *  - Converts "RATING" to stars.
      */
     function fetchAndBuildList(csvLink, containerId) {
       fetch(csvLink)
@@ -263,14 +307,16 @@
         .then(csvText => {
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
           const data = results.data;           // array of row objects
-          const fields = results.meta.fields;  // array of column headers
+          const fields = results.meta.fields;    // array of column headers
 
           const container = document.getElementById(containerId);
           container.innerHTML = "";
 
-          // Create heading row
+          // Create heading row and animate it.
           const headingRow = document.createElement("div");
           headingRow.classList.add("heading-row");
+          headingRow.style.animation = "fadeInLeft 0.5s ease forwards";
+          headingRow.style.animationDelay = "0s";
 
           // Rank heading cell
           const rankHeading = document.createElement("div");
@@ -288,17 +334,18 @@
 
           container.appendChild(headingRow);
 
-          // Now create each player-row
+          // Now create each player-row with sequential delays.
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("player-row");
+            // Apply sequential fade-in delay (e.g., 0.1s per row)
+            rowDiv.style.animation = "fadeInLeft 0.5s ease forwards";
+            rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s"; // +1 to start after header
 
             // Rank cell
             const rankDiv = document.createElement("div");
             rankDiv.classList.add("player-rank");
             rankDiv.textContent = index + 1;
-
-            // Border color for top 1/2/3
             if (index === 0) {
               rankDiv.classList.add("top1");
             } else if (index === 1) {
@@ -308,7 +355,6 @@
             } else {
               rankDiv.classList.add("other");
             }
-
             rowDiv.appendChild(rankDiv);
 
             // Each field cell
@@ -316,15 +362,12 @@
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               const rawValue = rowObj[fieldName] || "";
-
-              // Convert "RATING" to stars
               if (fieldName.toUpperCase() === "RATING") {
                 const ratingValue = parseInt(rawValue, 10) || 0;
                 cellDiv.textContent = "⭐".repeat(ratingValue);
               } else {
                 cellDiv.textContent = rawValue;
               }
-
               rowDiv.appendChild(cellDiv);
             });
 
