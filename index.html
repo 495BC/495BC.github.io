@@ -19,7 +19,7 @@
       min-height: 100vh;
       padding: 20px;
     }
-
+    
     /* MAIN TITLE - simple black background */
     .main-title {
       background-color: #000;
@@ -31,7 +31,7 @@
       font-size: 2rem;
       color: #fff;
     }
-
+    
     /* NAV BAR */
     .nav-bar {
       background-color: rgba(128,128,128,0.4);
@@ -43,12 +43,11 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
-
+    
     /************************************************
      * NEON BUTTON STYLES WITH CUSTOM COLORS
      * Forced 16:9 ratio (e.g., 200px width)
-     * Text transitions to white on hover (including reflection)
-     * Reduced glow intensity on hover
+     * On hover, only the text (and its reflection) transitions to white.
      ************************************************/
     .category-buttons {
       display: flex;
@@ -64,28 +63,23 @@
       padding: 0;
       text-decoration: none;
       text-transform: uppercase;
-      transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      transition: color 0.3s ease;
       letter-spacing: 4px;
       overflow: hidden;
       font-weight: bold;
       font-size: 1rem;
     }
-    /* Default neon colors for each button */
+    /* Custom Colors for Each Button */
     .category-buttons a.qb { color: #8A2BE2; } /* Purple */
     .category-buttons a.wr { color: #03e9f4; } /* Blue */
     .category-buttons a.db { color: #8B0000; } /* Dark red */
     .category-buttons a.de { color: #FFA500; } /* Orange */
-    /* Hover effect: text transitions to white; glow reduced */
+    /* Hover effect: only text and its reflection transition to white */
     .category-buttons a:hover {
-      background: currentColor;
       color: #fff;
-      box-shadow: 0 0 3px currentColor,
-                  0 0 15px currentColor,
-                  0 0 30px currentColor,
-                  0 0 100px currentColor;
       -webkit-box-reflect: below 1px linear-gradient(transparent, #fff);
     }
-    /* Animated Neon Borders using currentColor */
+    /* Animated Neon Borders using currentColor (unchanged) */
     .category-buttons a span {
       position: absolute;
       display: block;
@@ -133,7 +127,7 @@
       0% { bottom: -100%; }
       50%,100% { bottom: 100%; }
     }
-
+    
     /***********************************************
      * "VERTICAL LIST" LAYOUT
      ***********************************************/
@@ -149,14 +143,14 @@
       margin-bottom: 1rem;
       color: #fff;
     }
-
+    
     /* Container for the heading row + the player rows */
     .list-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;  /* Using the original gap from your code */
+      gap: 5px; /* reduced gap */
     }
-
+    
     /* A "heading row" with columns labeled */
     .heading-row {
       display: flex;
@@ -175,7 +169,7 @@
       width: 60px;
       flex-shrink: 0;
     }
-
+    
     /* Each player row is a flex container, "padded list" style */
     .player-row {
       display: flex;
@@ -187,7 +181,7 @@
       transition: color 0.3s ease, box-shadow 0.3s ease;
     }
     /* QB-specific styling: force 16:9 ratio, default light gray text with reflection,
-       and on hover transition to white with a gentler glow. */
+       and on hover transition text (and its reflection) to white with a gentler glow. */
     #qb-container .player-row {
       aspect-ratio: 16 / 9;
       color: #ccc;
@@ -198,7 +192,7 @@
       -webkit-box-reflect: below 1px linear-gradient(transparent, #fff);
       box-shadow: 0 2px 4px rgba(255,255,255,0.15);
     }
-
+    
     /* The rank cell for each row, with special borders for top 1/2/3 */
     .player-rank {
       width: 60px;
@@ -214,7 +208,7 @@
     .top2 { border: 2px solid silver; }
     .top3 { border: 2px solid #cd7f32; }
     .other { border: 2px solid #444; }
-
+    
     /* Each cell after rank */
     .player-cell {
       flex: 1;
@@ -228,12 +222,12 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 </head>
 <body>
-
+  
   <!-- MAIN TITLE -->
   <div class="main-title">
     <h1>Raider TC Stats</h1>
   </div>
-
+  
   <!-- NAV BAR with Neon Buttons -->
   <div class="nav-bar">
     <div class="category-buttons">
@@ -255,31 +249,31 @@
       </a>
     </div>
   </div>
-
+  
   <!-- QB SECTION -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
     <div class="list-container" id="qb-container"></div>
   </section>
-
+  
   <!-- WR SECTION -->
   <section id="wr-section">
     <h2>Wide Receiver Stats</h2>
     <div class="list-container" id="wr-container"></div>
   </section>
-
+  
   <!-- DB SECTION -->
   <section id="db-section">
     <h2>Defensive Back Stats</h2>
     <div class="list-container" id="db-container"></div>
   </section>
-
+  
   <!-- DE SECTION -->
   <section id="de-section">
     <h2>Defensive End Stats</h2>
     <div class="list-container" id="de-container"></div>
   </section>
-
+  
   <script>
     /*******************************************************
      * REPLACE THESE WITH YOUR ACTUAL PUBLISHED CSV LINKS
@@ -288,9 +282,9 @@
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSODRpqky0PxX7b2epxF2a6GFy7FyEKk7onSn96X9FjHSZXv03nE9zxQC6s35AiM1q8W7d1zrowdurX/pub?output=csv";
-
+    
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
-
+    
     // On page load, build all "lists" & show QB by default
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container");
@@ -299,14 +293,14 @@
       fetchAndBuildList(CSV_DE_LINK, "de-container");
       showSection("qb-section");
     });
-
+    
     // showSection: Hides all sections, shows only the requested one
     function showSection(sectionId) {
       sections.forEach(id => {
         document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
       });
     }
-
+    
     /**
      * fetchAndBuildList:
      *  - Builds a "heading row" with "Rank" + field names
@@ -321,20 +315,20 @@
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
           const data = results.data;           // array of row objects
           const fields = results.meta.fields;  // array of column headers
-
+    
           const container = document.getElementById(containerId);
           container.innerHTML = "";
-
+    
           // Create heading row
           const headingRow = document.createElement("div");
           headingRow.classList.add("heading-row");
-
+    
           // Rank heading cell
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
           rankHeading.textContent = "Rank";
           headingRow.appendChild(rankHeading);
-
+    
           // Field heading cells
           fields.forEach(fieldName => {
             const cell = document.createElement("div");
@@ -342,19 +336,19 @@
             cell.textContent = fieldName;
             headingRow.appendChild(cell);
           });
-
+    
           container.appendChild(headingRow);
-
+    
           // Now create each player-row
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("player-row");
-
+    
             // Rank cell
             const rankDiv = document.createElement("div");
             rankDiv.classList.add("player-rank");
             rankDiv.textContent = index + 1;
-
+    
             // Border color for top 1/2/3
             if (index === 0) {
               rankDiv.classList.add("top1");
@@ -365,15 +359,15 @@
             } else {
               rankDiv.classList.add("other");
             }
-
+    
             rowDiv.appendChild(rankDiv);
-
+    
             // Each field cell
             fields.forEach(fieldName => {
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               const rawValue = rowObj[fieldName] || "";
-
+    
               // Convert "RATING" to stars
               if (fieldName.toUpperCase() === "RATING") {
                 const ratingValue = parseInt(rawValue, 10) || 0;
@@ -381,16 +375,16 @@
               } else {
                 cellDiv.textContent = rawValue;
               }
-
+    
               rowDiv.appendChild(cellDiv);
             });
-
+    
             container.appendChild(rowDiv);
           });
         })
         .catch(err => console.error("Error fetching CSV:", err));
     }
   </script>
-
+  
 </body>
 </html>
