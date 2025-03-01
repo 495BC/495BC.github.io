@@ -20,7 +20,7 @@
       padding: 20px;
     }
 
-    /* MAIN TITLE - simple black background, no mouse gradient */
+    /* MAIN TITLE - simple black background */
     .main-title {
       background-color: #000;
       text-align: center;
@@ -46,6 +46,9 @@
 
     /************************************************
      * NEON BUTTON STYLES WITH CUSTOM COLORS
+     * (Buttons are now forced to a 16:9 ratio,
+     * and transition their text and reflection to white on hover.
+     * The glow is slightly reduced in intensity.)
      ************************************************/
     .category-buttons {
       display: flex;
@@ -53,38 +56,36 @@
     }
     .category-buttons a {
       position: relative;
-      display: inline-block;
-      padding: 25px 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      /* Force a 16:9 ratio with a fixed width */
+      aspect-ratio: 16 / 9;
+      width: 200px;
+      /* Remove extra padding; use a bit of internal space via line-height */
+      padding: 0;
       text-decoration: none;
       text-transform: uppercase;
-      transition: 0.5s;
+      transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
       letter-spacing: 4px;
       overflow: hidden;
       font-weight: bold;
       font-size: 1rem;
     }
-    /* Default hover uses currentColor for glow */
+    /* Default neon colors for each button */
+    .category-buttons a.qb { color: #8A2BE2; } /* Purple */
+    .category-buttons a.wr { color: #03e9f4; } /* Blue */
+    .category-buttons a.db { color: #8B0000; } /* Dark red */
+    .category-buttons a.de { color: #FFA500; } /* Orange */
+    /* Hover effect: text transitions to white, reflection changes, and glow is reduced */
     .category-buttons a:hover {
       background: currentColor;
-      color: #050801;
-      box-shadow: 0 0 5px currentColor,
-                  0 0 25px currentColor,
-                  0 0 50px currentColor,
-                  0 0 200px currentColor;
-      -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
-    }
-    /* Custom Colors for Each Button */
-    .category-buttons a.qb {
-      color: #8A2BE2; /* Purple */
-    }
-    .category-buttons a.wr {
-      color: #03e9f4; /* Blue */
-    }
-    .category-buttons a.db {
-      color: #8B0000; /* Dark red */
-    }
-    .category-buttons a.de {
-      color: #FFA500; /* Orange */
+      color: #fff;
+      box-shadow: 0 0 3px currentColor,
+                  0 0 15px currentColor,
+                  0 0 30px currentColor,
+                  0 0 100px currentColor;
+      -webkit-box-reflect: below 1px linear-gradient(transparent, #fff);
     }
     /* Animated Neon Borders using currentColor */
     .category-buttons a span {
@@ -185,7 +186,21 @@
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      transition: color 0.3s ease, box-shadow 0.3s ease;
     }
+    /* QB-specific styling: force 16:9 ratio, default light gray text with reflection,
+       and on hover transition to white with a gentler glow. */
+    #qb-container .player-row {
+      aspect-ratio: 16 / 9;
+      color: #ccc;
+      -webkit-box-reflect: below 1px linear-gradient(transparent, rgba(204,204,204,0.5));
+    }
+    #qb-container .player-row:hover {
+      color: #fff;
+      -webkit-box-reflect: below 1px linear-gradient(transparent, #fff);
+      box-shadow: 0 2px 4px rgba(255,255,255,0.15);
+    }
+
     /* The rank cell for each row, with special borders for top 1/2/3 */
     .player-rank {
       width: 60px;
