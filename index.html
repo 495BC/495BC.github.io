@@ -53,8 +53,9 @@
     }
     .category-buttons a {
       position: relative;
-      display: inline-block;
-      padding: 25px 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       text-decoration: none;
       text-transform: uppercase;
       transition: 0.5s;
@@ -62,8 +63,9 @@
       font-weight: bold;
       font-size: 1rem;
       border: 2px solid; /* Static border */
-      /* The border color will be defined via the custom property */
       border-color: var(--button-neon);
+      height: 60px;           /* Fixed height */
+      aspect-ratio: 3 / 1;     /* Width is 3 times height */
     }
     /* Define a custom property for neon color per button */
     .category-buttons a.qb {
