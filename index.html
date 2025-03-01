@@ -19,8 +19,21 @@
       min-height: 100vh;
       padding: 20px;
       overflow-x: hidden;
+      position: relative;
     }
-
+    /* Background container that sits behind everything */
+    #bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.5s ease;
+      opacity: 1;
+    }
     /* MAIN TITLE */
     .main-title {
       background-color: #000;
@@ -32,7 +45,6 @@
       font-size: 2rem;
       color: #fff;
     }
-
     /* NAV BAR */
     .nav-bar {
       background-color: rgba(128,128,128,0.4);
@@ -44,7 +56,6 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
-
     /************************************************
      * NEON BUTTON STYLES WITH CUSTOM COLORS
      ************************************************/
@@ -93,44 +104,23 @@
                   0 0 200px var(--button-neon);
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
-
     /***********************************************
      * STAT PAGE SECTIONS
      ***********************************************/
     section {
       display: none;
-      background-color: #222;
+      background-color: rgba(34,34,34,0.85);
       margin: 1rem auto;
       padding: 1rem;
       border-radius: 4px;
       max-width: 90%;
       transform: translateX(-50px);
       opacity: 0;
-      /* Default background if none is specified */
-      background: #222;
-    }
-    /* Custom background images for each stat page */
-    #qb-section {
-      background: url('https://wallpaperaccess.com/full/1840637.jpg') no-repeat center center;
-      background-size: cover;
-    }
-    #wr-section {
-      background: url('https://th.bing.com/th/id/R.8909fe74557eb4929c769af4e6cccab5?rik=fWIZE6jl4EAu%2bw&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwp1827787.jpg&ehk=8%2fXDqhGB%2fd3yisEHY%2fPuoUF7U9FFQh6k1HRaR20%2bClU%3d&risl=&pid=ImgRaw&r=0') no-repeat center center;
-      background-size: cover;
-    }
-    #db-section {
-      background: url('https://th.bing.com/th/id/R.291aaa58206bf933b6a5bc2faf0f8a2b?rik=mE7idVPsBTPkoA&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fqp66gmr.jpg&ehk=xNIWXdF646IWPF1v7N1HcdNxuAxhrFHs50yRJD2ugLw%3d&risl=&pid=ImgRaw&r=0') no-repeat center center;
-      background-size: cover;
-    }
-    #de-section {
-      background: url('https://w0.peakpx.com/wallpaper/803/1005/HD-wallpaper-las-vegas-raiders-american-football-team-black-stone-background-las-vegas-raiders-logo-grunge-art-nfl-american-football-usa-las-vegas-raiders-emblem.jpg') no-repeat center center;
-      background-size: cover;
     }
     section h2 {
       margin-bottom: 1rem;
       color: #fff;
     }
-
     /* Container for the table */
     .list-container {
       display: flex;
@@ -184,7 +174,6 @@
       border-radius: 5px;
       margin-right: 5px;
     }
-
     /* ---------------- Animation Classes ---------------- */
     .fade-in-left {
       animation: fadeInLeft 0.5s ease forwards;
@@ -205,12 +194,13 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 </head>
 <body>
-
+  <!-- Background container -->
+  <div id="bg-container"></div>
+  
   <!-- MAIN TITLE -->
   <div class="main-title">
     <h1>Raider TC Stats</h1>
   </div>
-
   <!-- NAV BAR -->
   <div class="nav-bar">
     <div class="category-buttons">
@@ -220,49 +210,68 @@
       <a href="#" onclick="switchSection('de-section')" class="de">DE</a>
     </div>
   </div>
-
   <!-- QB SECTION -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
     <div class="list-container" id="qb-container"></div>
   </section>
-
   <!-- WR SECTION -->
   <section id="wr-section">
     <h2>Wide Receiver Stats</h2>
     <div class="list-container" id="wr-container"></div>
   </section>
-
   <!-- DB SECTION -->
   <section id="db-section">
     <h2>Defensive Back Stats</h2>
     <div class="list-container" id="db-container"></div>
   </section>
-
   <!-- DE SECTION -->
   <section id="de-section">
     <h2>Defensive End Stats</h2>
     <div class="list-container" id="de-container"></div>
   </section>
-
   <script>
+    // Background images for each stat page
+    const bgImages = {
+      "qb-section": "https://via.placeholder.com/1600x900?text=QB+Leaderboard+BG",
+      "wr-section": "https://via.placeholder.com/1600x900?text=WR+Leaderboard+BG",
+      "db-section": "https://via.placeholder.com/1600x900?text=DB+Leaderboard+BG",
+      "de-section": "https://via.placeholder.com/1600x900?text=DE+Leaderboard+BG"
+    };
+
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
+    // Helper to update the background container with a new image via fade-out then fade-in.
+    function updateBackground(newSectionId) {
+      const bgContainer = document.getElementById("bg-container");
+      // Fade out the current background.
+      bgContainer.style.opacity = 0;
+      setTimeout(() => {
+        // Change the background image.
+        bgContainer.style.backgroundImage = `url('${bgImages[newSectionId]}')`;
+        // Fade in the new background.
+        bgContainer.style.opacity = 1;
+      }, 500); // matches the CSS transition duration
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container");
       fetchAndBuildList(CSV_WR_LINK, "wr-container");
       fetchAndBuildList(CSV_DB_LINK, "db-container");
       fetchAndBuildList(CSV_DE_LINK, "de-container");
+      // Show QB section by default and update background.
       let initialSection = document.getElementById("qb-section");
       initialSection.style.display = "block";
       initialSection.classList.add("fade-in-left");
+      updateBackground("qb-section");
     });
 
     function switchSection(newSectionId) {
+      updateBackground(newSectionId);
       sections.forEach(id => {
         let sectionEl = document.getElementById(id);
         if (id === newSectionId) {
@@ -352,6 +361,5 @@
         .catch(err => console.error("Error fetching CSV:", err));
     }
   </script>
-
 </body>
 </html>
