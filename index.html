@@ -21,6 +21,26 @@
       overflow-x: hidden;
       position: relative;
     }
+    /* Custom Scrollbar Styles (WebKit) */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #222;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 6px;
+      border: 3px solid #222;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #aaa;
+    }
+    /* Firefox custom scrollbar */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: #888 #222;
+    }
     /* Background container that sits behind everything */
     #bg-container {
       position: fixed;
@@ -231,7 +251,7 @@
     <div class="list-container" id="de-container"></div>
   </section>
   <script>
-    // Background images for each stat page
+    // Background images for each stat page (unchanged)
     const bgImages = {
       "qb-section": "https://wallpaperaccess.com/full/1840637.jpg",
       "wr-section": "https://th.bing.com/th/id/R.8909fe74557eb4929c769af4e6cccab5?rik=fWIZE6jl4EAu%2bw&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwp1827787.jpg",
@@ -248,20 +268,16 @@
     // Helper to update the background container with a new image via fade-out then fade-in.
     function updateBackground(newSectionId) {
       const bgContainer = document.getElementById("bg-container");
-      // Fade out the current background.
       bgContainer.style.opacity = 0;
       setTimeout(() => {
-        // Change the background image.
         bgContainer.style.backgroundImage = `url('${bgImages[newSectionId]}')`;
-        // Fade in the new background.
         bgContainer.style.opacity = 1;
       }, 500);
     }
 
-    // Scroll event for parallax-like background movement.
+    // Parallax-style scroll: as you scroll, adjust vertical position.
     window.addEventListener('scroll', () => {
       const scrollPos = window.scrollY;
-      // Adjust the factor for aesthetic effect.
       const factor = 0.3;
       const bgContainer = document.getElementById("bg-container");
       bgContainer.style.backgroundPosition = `center ${-scrollPos * factor}px`;
@@ -272,7 +288,6 @@
       fetchAndBuildList(CSV_WR_LINK, "wr-container");
       fetchAndBuildList(CSV_DB_LINK, "db-container");
       fetchAndBuildList(CSV_DE_LINK, "de-container");
-      // Show QB section by default and update background.
       let initialSection = document.getElementById("qb-section");
       initialSection.style.display = "block";
       initialSection.classList.add("fade-in-left");
