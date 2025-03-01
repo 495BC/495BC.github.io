@@ -14,14 +14,14 @@
     }
     body {
       font-family: 'IBM Plex Sans', sans-serif;
-      background: #111; /* near-black background */
+      background: #111;
       color: #fff;
       min-height: 100vh;
       padding: 20px;
       overflow-x: hidden;
     }
 
-    /* MAIN TITLE - simple black background, no mouse gradient */
+    /* MAIN TITLE */
     .main-title {
       background-color: #000;
       text-align: center;
@@ -63,14 +63,13 @@
       letter-spacing: 4px;
       font-weight: bold;
       font-size: 1rem;
-      border: 2px solid; /* Static border */
+      border: 2px solid;
       border-color: var(--button-neon);
-      height: 60px;           /* Fixed height */
-      aspect-ratio: 3 / 1;     /* Width is 3 times height */
+      height: 60px;
+      aspect-ratio: 3 / 1;
     }
-    /* Define a custom property for neon color per button */
     .category-buttons a.qb {
-      color: #8A2BE2; /* initial text color */
+      color: #8A2BE2;
       --button-neon: #8A2BE2;
     }
     .category-buttons a.wr {
@@ -85,7 +84,6 @@
       color: #FFA500;
       --button-neon: #FFA500;
     }
-    /* On hover, force text to white and add glowing effect */
     .category-buttons a:hover {
       background: var(--button-neon);
       color: #fff;
@@ -97,7 +95,7 @@
     }
 
     /***********************************************
-     * "VERTICAL LIST" LAYOUT
+     * STAT PAGE SECTIONS
      ***********************************************/
     section {
       display: none;
@@ -106,26 +104,42 @@
       padding: 1rem;
       border-radius: 4px;
       max-width: 90%;
-      /* Initially positioned offscreen left */
       transform: translateX(-50px);
       opacity: 0;
+      /* Default background if none is specified */
+      background: #222;
+    }
+    /* Custom background images for each stat page */
+    #qb-section {
+      background: url('https://via.placeholder.com/800x600?text=QB+Background') no-repeat center center;
+      background-size: cover;
+    }
+    #wr-section {
+      background: url('https://via.placeholder.com/800x600?text=WR+Background') no-repeat center center;
+      background-size: cover;
+    }
+    #db-section {
+      background: url('https://via.placeholder.com/800x600?text=DB+Background') no-repeat center center;
+      background-size: cover;
+    }
+    #de-section {
+      background: url('https://via.placeholder.com/800x600?text=DE+Background') no-repeat center center;
+      background-size: cover;
     }
     section h2 {
       margin-bottom: 1rem;
       color: #fff;
     }
 
-    /* Container for the heading row + the player rows */
+    /* Container for the table */
     .list-container {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-
-    /* A "heading row" with columns labeled */
     .heading-row {
       display: flex;
-      background: #333;
+      background: rgba(0,0,0,0.7);
       padding: 10px;
       border-radius: 5px;
       font-weight: bold;
@@ -135,24 +149,20 @@
       text-align: left;
       padding: 0 10px;
     }
-    /* Rank heading narrower */
     .heading-cell.rank-cell {
       width: 60px;
       flex-shrink: 0;
     }
-
-    /* Each player row is a flex container, "padded list" style */
     .player-row {
       display: flex;
       align-items: center;
-      background: #2a2a2a;
+      background: rgba(0,0,0,0.5);
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
       transform: translateX(-50px);
       opacity: 0;
     }
-    /* The rank cell for each row, with special borders for top 1/2/3 */
     .player-rank {
       width: 60px;
       flex-shrink: 0;
@@ -167,22 +177,18 @@
     .top2 { border: 2px solid silver; }
     .top3 { border: 2px solid #cd7f32; }
     .other { border: 2px solid #444; }
-
-    /* Each cell after rank */
     .player-cell {
       flex: 1;
       padding: 10px;
-      background: #111;
+      background: rgba(0,0,0,0.7);
       border-radius: 5px;
       margin-right: 5px;
     }
 
     /* ---------------- Animation Classes ---------------- */
-    /* Fade in from left */
     .fade-in-left {
       animation: fadeInLeft 0.5s ease forwards;
     }
-    /* Fade out to left */
     .fade-out-left {
       animation: fadeOutLeft 0.5s ease forwards;
     }
@@ -205,21 +211,13 @@
     <h1>Raider TC Stats</h1>
   </div>
 
-  <!-- NAV BAR with Neon Buttons -->
+  <!-- NAV BAR -->
   <div class="nav-bar">
     <div class="category-buttons">
-      <a href="#" onclick="switchSection('qb-section')" class="qb">
-        QB
-      </a>
-      <a href="#" onclick="switchSection('wr-section')" class="wr">
-        WR
-      </a>
-      <a href="#" onclick="switchSection('db-section')" class="db">
-        DB
-      </a>
-      <a href="#" onclick="switchSection('de-section')" class="de">
-        DE
-      </a>
+      <a href="#" onclick="switchSection('qb-section')" class="qb">QB</a>
+      <a href="#" onclick="switchSection('wr-section')" class="wr">WR</a>
+      <a href="#" onclick="switchSection('db-section')" class="db">DB</a>
+      <a href="#" onclick="switchSection('de-section')" class="de">DE</a>
     </div>
   </div>
 
@@ -248,40 +246,31 @@
   </section>
 
   <script>
-    /*******************************************************
-     * REPLACE THESE WITH YOUR ACTUAL PUBLISHED CSV LINKS
-     *******************************************************/
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
-
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On page load, build all lists & fade in the QB section by default.
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container");
       fetchAndBuildList(CSV_WR_LINK, "wr-container");
       fetchAndBuildList(CSV_DB_LINK, "db-container");
       fetchAndBuildList(CSV_DE_LINK, "de-container");
-      // Initially show QB section with fade-in
       let initialSection = document.getElementById("qb-section");
       initialSection.style.display = "block";
       initialSection.classList.add("fade-in-left");
     });
 
-    // switchSection handles fading out current section and fading in new one.
     function switchSection(newSectionId) {
       sections.forEach(id => {
         let sectionEl = document.getElementById(id);
         if (id === newSectionId) {
-          // If the target section is not visible, display and fade in.
           sectionEl.style.display = "block";
           sectionEl.classList.remove("fade-out-left");
           sectionEl.classList.add("fade-in-left");
         } else {
           if (sectionEl.style.display === "block") {
-            // Fade out the currently visible section.
             sectionEl.classList.remove("fade-in-left");
             sectionEl.classList.add("fade-out-left");
             sectionEl.addEventListener("animationend", function handler() {
@@ -294,37 +283,27 @@
       });
     }
 
-    /**
-     * fetchAndBuildList:
-     *  - Builds a "heading row" with "Rank" + field names.
-     *  - Creates a "player-row" for each CSV row.
-     *  - Applies a sequential fade-in animation from left.
-     *  - Converts "RATING" to stars.
-     */
     function fetchAndBuildList(csvLink, containerId) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;           // array of row objects
-          const fields = results.meta.fields;    // array of column headers
+          const data = results.data;
+          const fields = results.meta.fields;
 
           const container = document.getElementById(containerId);
           container.innerHTML = "";
 
-          // Create heading row and animate it.
           const headingRow = document.createElement("div");
           headingRow.classList.add("heading-row");
           headingRow.style.animation = "fadeInLeft 0.5s ease forwards";
           headingRow.style.animationDelay = "0s";
 
-          // Rank heading cell
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
           rankHeading.textContent = "Rank";
           headingRow.appendChild(rankHeading);
 
-          // Field heading cells
           fields.forEach(fieldName => {
             const cell = document.createElement("div");
             cell.classList.add("heading-cell");
@@ -334,15 +313,12 @@
 
           container.appendChild(headingRow);
 
-          // Now create each player-row with sequential delays.
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("player-row");
-            // Apply sequential fade-in delay (e.g., 0.1s per row)
             rowDiv.style.animation = "fadeInLeft 0.5s ease forwards";
-            rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s"; // +1 to start after header
+            rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
 
-            // Rank cell
             const rankDiv = document.createElement("div");
             rankDiv.classList.add("player-rank");
             rankDiv.textContent = index + 1;
@@ -357,7 +333,6 @@
             }
             rowDiv.appendChild(rankDiv);
 
-            // Each field cell
             fields.forEach(fieldName => {
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
