@@ -46,9 +46,9 @@
 
     /************************************************
      * NEON BUTTON STYLES WITH CUSTOM COLORS
-     * (Buttons are now forced to a 16:9 ratio,
-     * and transition their text and reflection to white on hover.
-     * The glow is slightly reduced in intensity.)
+     * Forced 16:9 ratio (e.g., 200px width)
+     * Text transitions to white on hover (including reflection)
+     * Reduced glow intensity on hover
      ************************************************/
     .category-buttons {
       display: flex;
@@ -59,10 +59,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      /* Force a 16:9 ratio with a fixed width */
       aspect-ratio: 16 / 9;
       width: 200px;
-      /* Remove extra padding; use a bit of internal space via line-height */
       padding: 0;
       text-decoration: none;
       text-transform: uppercase;
@@ -77,7 +75,7 @@
     .category-buttons a.wr { color: #03e9f4; } /* Blue */
     .category-buttons a.db { color: #8B0000; } /* Dark red */
     .category-buttons a.de { color: #FFA500; } /* Orange */
-    /* Hover effect: text transitions to white, reflection changes, and glow is reduced */
+    /* Hover effect: text transitions to white; glow reduced */
     .category-buttons a:hover {
       background: currentColor;
       color: #fff;
@@ -156,7 +154,7 @@
     .list-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 10px;  /* Using the original gap from your code */
     }
 
     /* A "heading row" with columns labeled */
