@@ -59,9 +59,11 @@
       text-transform: uppercase;
       transition: 0.5s;
       letter-spacing: 4px;
-      overflow: hidden;
       font-weight: bold;
       font-size: 1rem;
+      border: 2px solid; /* Static border */
+      /* The border color will be defined via the custom property */
+      border-color: var(--button-neon);
     }
     /* Define a custom property for neon color per button */
     .category-buttons a.qb {
@@ -80,63 +82,15 @@
       color: #FFA500;
       --button-neon: #FFA500;
     }
-    /* On hover, force text and reflection to white but keep border glow from the custom variable */
+    /* On hover, force text (and reflection) to white and add glowing effect */
     .category-buttons a:hover {
       background: var(--button-neon);
-      color: #fff; /* force text and its reflection to white */
+      color: #fff; /* force text to white */
       box-shadow: 0 0 5px var(--button-neon),
                   0 0 25px var(--button-neon),
                   0 0 50px var(--button-neon),
                   0 0 200px var(--button-neon);
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
-    }
-    /* Animated Neon Borders using the custom variable */
-    .category-buttons a span {
-      position: absolute;
-      display: block;
-    }
-    .category-buttons a span:nth-child(1) {
-      top: 0; left: 0;
-      width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--button-neon));
-      animation: animate1 1s linear infinite;
-    }
-    @keyframes animate1 {
-      0% { left: -100%; }
-      50%,100% { left: 100%; }
-    }
-    .category-buttons a span:nth-child(2) {
-      top: -100%; right: 0;
-      width: 2px; height: 100%;
-      background: linear-gradient(180deg, transparent, var(--button-neon));
-      animation: animate2 1s linear infinite;
-      animation-delay: 0.25s;
-    }
-    @keyframes animate2 {
-      0% { top: -100%; }
-      50%,100% { top: 100%; }
-    }
-    .category-buttons a span:nth-child(3) {
-      bottom: 0; right: 0;
-      width: 100%; height: 2px;
-      background: linear-gradient(270deg, transparent, var(--button-neon));
-      animation: animate3 1s linear infinite;
-      animation-delay: 0.5s;
-    }
-    @keyframes animate3 {
-      0% { right: -100%; }
-      50%,100% { right: 100%; }
-    }
-    .category-buttons a span:nth-child(4) {
-      bottom: -100%; left: 0;
-      width: 2px; height: 100%;
-      background: linear-gradient(360deg, transparent, var(--button-neon));
-      animation: animate4 1s linear infinite;
-      animation-delay: 0.75s;
-    }
-    @keyframes animate4 {
-      0% { bottom: -100%; }
-      50%,100% { bottom: 100%; }
     }
 
     /***********************************************
@@ -229,19 +183,15 @@
   <div class="nav-bar">
     <div class="category-buttons">
       <a href="#" onclick="showSection('qb-section')" class="qb">
-        <span></span><span></span><span></span><span></span>
         QB
       </a>
       <a href="#" onclick="showSection('wr-section')" class="wr">
-        <span></span><span></span><span></span><span></span>
         WR
       </a>
       <a href="#" onclick="showSection('db-section')" class="db">
-        <span></span><span></span><span></span><span></span>
         DB
       </a>
       <a href="#" onclick="showSection('de-section')" class="de">
-        <span></span><span></span><span></span><span></span>
         DE
       </a>
     </div>
