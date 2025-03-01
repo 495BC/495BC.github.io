@@ -63,30 +63,34 @@
       font-weight: bold;
       font-size: 1rem;
     }
-    /* Default hover uses currentColor for glow */
-    .category-buttons a:hover {
-      background: currentColor;
-      color: #050801;
-      box-shadow: 0 0 5px currentColor,
-                  0 0 25px currentColor,
-                  0 0 50px currentColor,
-                  0 0 200px currentColor;
-      -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
-    }
-    /* Custom Colors for Each Button */
+    /* Define a custom property for neon color per button */
     .category-buttons a.qb {
-      color: #8A2BE2; /* Purple */
+      color: #8A2BE2; /* initial text color */
+      --button-neon: #8A2BE2;
     }
     .category-buttons a.wr {
-      color: #03e9f4; /* Blue */
+      color: #03e9f4;
+      --button-neon: #03e9f4;
     }
     .category-buttons a.db {
-      color: #8B0000; /* Dark red */
+      color: #8B0000;
+      --button-neon: #8B0000;
     }
     .category-buttons a.de {
-      color: #FFA500; /* Orange */
+      color: #FFA500;
+      --button-neon: #FFA500;
     }
-    /* Animated Neon Borders using currentColor */
+    /* On hover, force text and reflection to white but keep border glow from the custom variable */
+    .category-buttons a:hover {
+      background: var(--button-neon);
+      color: #fff; /* force text and its reflection to white */
+      box-shadow: 0 0 5px var(--button-neon),
+                  0 0 25px var(--button-neon),
+                  0 0 50px var(--button-neon),
+                  0 0 200px var(--button-neon);
+      -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+    }
+    /* Animated Neon Borders using the custom variable */
     .category-buttons a span {
       position: absolute;
       display: block;
@@ -94,7 +98,7 @@
     .category-buttons a span:nth-child(1) {
       top: 0; left: 0;
       width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, currentColor);
+      background: linear-gradient(90deg, transparent, var(--button-neon));
       animation: animate1 1s linear infinite;
     }
     @keyframes animate1 {
@@ -104,7 +108,7 @@
     .category-buttons a span:nth-child(2) {
       top: -100%; right: 0;
       width: 2px; height: 100%;
-      background: linear-gradient(180deg, transparent, currentColor);
+      background: linear-gradient(180deg, transparent, var(--button-neon));
       animation: animate2 1s linear infinite;
       animation-delay: 0.25s;
     }
@@ -115,7 +119,7 @@
     .category-buttons a span:nth-child(3) {
       bottom: 0; right: 0;
       width: 100%; height: 2px;
-      background: linear-gradient(270deg, transparent, currentColor);
+      background: linear-gradient(270deg, transparent, var(--button-neon));
       animation: animate3 1s linear infinite;
       animation-delay: 0.5s;
     }
@@ -126,7 +130,7 @@
     .category-buttons a span:nth-child(4) {
       bottom: -100%; left: 0;
       width: 2px; height: 100%;
-      background: linear-gradient(360deg, transparent, currentColor);
+      background: linear-gradient(360deg, transparent, var(--button-neon));
       animation: animate4 1s linear infinite;
       animation-delay: 0.75s;
     }
