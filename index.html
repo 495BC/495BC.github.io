@@ -251,7 +251,7 @@
     <div class="list-container" id="de-container"></div>
   </section>
   <script>
-    // Background images for each stat page
+    // Background images for each stat page (unchanged)
     const bgImages = {
       "qb-section": "https://wallpaperaccess.com/full/1840637.jpg",
       "wr-section": "https://th.bing.com/th/id/R.8909fe74557eb4929c769af4e6cccab5?rik=fWIZE6jl4EAu%2bw&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwp1827787.jpg",
@@ -371,12 +371,8 @@
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
               
-              // If the field is "STARs" (case-insensitive), convert the numerical RATING to stars.
-              if (fieldName.toUpperCase() === "STARS") {
-                cellDiv.textContent = convertRatingToStars(parseFloat(rawValue));
-              } else {
-                cellDiv.textContent = rawValue;
-              }
+              // Do not convert any column; simply output the raw value.
+              cellDiv.textContent = rawValue;
               rowDiv.appendChild(cellDiv);
             });
 
@@ -384,16 +380,6 @@
           });
         })
         .catch(err => console.error("Error fetching CSV:", err));
-    }
-
-    // Helper function for star conversion
-    function convertRatingToStars(ratingValue) {
-      if (isNaN(ratingValue) || ratingValue <= 0) return "✩"; // Empty star
-      if (ratingValue >= 90) return "⭐⭐⭐⭐⭐";
-      if (ratingValue >= 75) return "⭐⭐⭐⭐";
-      if (ratingValue >= 50) return "⭐⭐⭐";
-      if (ratingValue >= 25) return "⭐⭐";
-      return "⭐"; // Default 1 star for low ratings
     }
   </script>
 </body>
