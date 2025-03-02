@@ -372,7 +372,7 @@
               let rawValue = rowObj[fieldName] || "";
               
               // If the field is "RATING", then multiply its numeric value by star emoji.
-              if (fieldName.toUpperCase() === "RATING") {
+              if (fieldName.toUpperCase() === "STARs") {
                 const ratingValue = parseFloat(rawValue) || 0;
                 cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
               } else {
