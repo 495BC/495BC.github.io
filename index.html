@@ -22,17 +22,26 @@
       position: relative;
     }
     /* Custom Scrollbar Styles (WebKit & Firefox) */
-    ::-webkit-scrollbar { width: 12px; }
-    ::-webkit-scrollbar-track { background: #222; }
-    ::-webkit-scrollbar-thumb { 
-      background-color: #888; 
-      border-radius: 6px; 
-      border: 3px solid #222; 
+    ::-webkit-scrollbar {
+      width: 12px;
     }
-    ::-webkit-scrollbar-thumb:hover { background-color: #aaa; }
-    html { scrollbar-width: thin; scrollbar-color: #888 #222; }
-    
-    /* Background container that sits behind everything */
+    ::-webkit-scrollbar-track {
+      background: #222;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 6px;
+      border: 3px solid #222;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #aaa;
+    }
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: #888 #222;
+    }
+
+    /* Background container behind everything */
     #bg-container {
       position: fixed;
       top: 0;
@@ -45,6 +54,7 @@
       transition: opacity 0.5s ease, background-position 0.5s ease-out;
       opacity: 1;
     }
+
     /* MAIN TITLE */
     .main-title {
       background-color: #000;
@@ -52,8 +62,11 @@
       padding: 1rem;
       margin-bottom: 1rem;
     }
-    .main-title h1 { font-size: 2rem; color: #fff; }
-    
+    .main-title h1 {
+      font-size: 2rem;
+      color: #fff;
+    }
+
     /* NAV BAR */
     .nav-bar {
       background-color: rgba(128,128,128,0.4);
@@ -65,10 +78,14 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
+
     /************************************************
      * NEON BUTTON STYLES WITH CUSTOM COLORS
      ************************************************/
-    .category-buttons { display: flex; gap: 1rem; }
+    .category-buttons {
+      display: flex;
+      gap: 1rem;
+    }
     .category-buttons a {
       position: relative;
       display: inline-flex;
@@ -85,10 +102,22 @@
       height: 60px;
       aspect-ratio: 3 / 1;
     }
-    .category-buttons a.qb { color: #8A2BE2; --button-neon: #8A2BE2; }
-    .category-buttons a.wr { color: #03e9f4; --button-neon: #03e9f4; }
-    .category-buttons a.db { color: #8B0000; --button-neon: #8B0000; }
-    .category-buttons a.de { color: #FFA500; --button-neon: #FFA500; }
+    .category-buttons a.qb {
+      color: #8A2BE2;
+      --button-neon: #8A2BE2;
+    }
+    .category-buttons a.wr {
+      color: #03e9f4;
+      --button-neon: #03e9f4;
+    }
+    .category-buttons a.db {
+      color: #8B0000;
+      --button-neon: #8B0000;
+    }
+    .category-buttons a.de {
+      color: #FFA500;
+      --button-neon: #FFA500;
+    }
     .category-buttons a:hover {
       background: var(--button-neon);
       color: #fff;
@@ -98,7 +127,7 @@
                   0 0 200px var(--button-neon);
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
-    
+
     /***********************************************
      * STAT PAGE SECTIONS
      ***********************************************/
@@ -112,41 +141,66 @@
       transform: translateX(-50px);
       opacity: 0;
     }
-    section h2 { margin-bottom: 1rem; color: #fff; }
-    
+    section h2 {
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
     /* Container for the table */
     .list-container {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    
-    /* Grid layout for heading and data rows.
-       The rank cell is fixed at 60px; the remaining columns are set to 1fr each.
-       We set grid-template-columns dynamically based on the CSV fields.
-    */
-    .heading-row, .player-row {
+
+    /* We use grid for the heading row and each player row */
+    .heading-row,
+    .player-row {
       display: grid;
       gap: 5px;
       align-items: center;
       padding: 10px;
       border-radius: 5px;
     }
-    .heading-row { background: rgba(0,0,0,0.7); font-weight: bold; }
-    .player-row { background: rgba(0,0,0,0.5); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    
-    /* Cells */
-    .heading-cell, .player-cell { padding: 0 10px; text-align: left; }
-    .heading-cell.rank-cell, .player-rank { width: 60px; text-align: center; }
-    .player-rank { font-weight: bold; background: #000; border-radius: 5px; }
+    .heading-row {
+      background: rgba(0,0,0,0.7);
+      font-weight: bold;
+    }
+    .player-row {
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* The "Rank" cell is the first column, 60px wide from the grid definition. */
+    .rank-cell {
+      text-align: center;
+    }
+
+    /* For heading cells and player cells */
+    .heading-cell, .player-cell {
+      padding: 0 10px;
+      text-align: left;
+    }
+
+    /* For the rank cell in the data rows */
+    .player-rank {
+      text-align: center;
+      font-weight: bold;
+      background: #000;
+      border-radius: 5px;
+    }
     .top1 { border: 2px solid gold; }
     .top2 { border: 2px solid silver; }
     .top3 { border: 2px solid #cd7f32; }
     .other { border: 2px solid #444; }
-    
+
     /* Animations */
-    .fade-in-left { animation: fadeInLeft 0.5s ease forwards; }
-    .fade-out-left { animation: fadeOutLeft 0.5s ease forwards; }
+    .fade-in-left {
+      animation: fadeInLeft 0.5s ease forwards;
+    }
+    .fade-out-left {
+      animation: fadeOutLeft 0.5s ease forwards;
+    }
     @keyframes fadeInLeft {
       0% { opacity: 0; transform: translateX(-50px); }
       100% { opacity: 1; transform: translateX(0); }
@@ -162,7 +216,7 @@
 <body>
   <!-- Background container -->
   <div id="bg-container"></div>
-  
+
   <!-- MAIN TITLE -->
   <div class="main-title">
     <h1>Raider TC Stats</h1>
@@ -177,31 +231,31 @@
       <a href="#" onclick="switchSection('de-section')" class="de">DE</a>
     </div>
   </div>
-  
+
   <!-- QB SECTION -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
     <div class="list-container" id="qb-container"></div>
   </section>
-  
+
   <!-- WR SECTION -->
   <section id="wr-section">
     <h2>Wide Receiver Stats</h2>
     <div class="list-container" id="wr-container"></div>
   </section>
-  
+
   <!-- DB SECTION -->
   <section id="db-section">
     <h2>Defensive Back Stats</h2>
     <div class="list-container" id="db-container"></div>
   </section>
-  
+
   <!-- DE SECTION -->
   <section id="de-section">
     <h2>Defensive End Stats</h2>
     <div class="list-container" id="de-container"></div>
   </section>
-  
+
   <script>
     // Background images for each stat page
     const bgImages = {
@@ -211,24 +265,32 @@
       "de-section": "https://w0.peakpx.com/wallpaper/803/1005/HD-wallpaper-las-vegas-raiders-american-football-team-black-stone-background-las-vegas-raiders-logo-grunge-art-nfl-american-football-usa-las-vegas-raiders-emblem.jpg"
     };
 
-    // CSV links for each stat page
+    // CSV links
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
 
+    // We define the # of CSV columns for each position 
+    // (excluding rank) so we can set grid-template-columns properly:
+    const colCountQB = 10; // Example: 10 columns for QB
+    const colCountWR = 9;  // Example: 9 columns for WR
+    const colCountDB = 8;  // Example: 8 columns for DB
+    const colCountDE = 8;  // Example: 8 columns for DE
+
+    // Section IDs
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On page load, build tables and show QB by default
+    // On DOM load, build all pages & show QB by default
     window.addEventListener('DOMContentLoaded', () => {
-      fetchAndBuildList(CSV_QB_LINK, "qb-container");
-      fetchAndBuildList(CSV_WR_LINK, "wr-container");
-      fetchAndBuildList(CSV_DB_LINK, "db-container");
-      fetchAndBuildList(CSV_DE_LINK, "de-container");
+      fetchAndBuildList(CSV_QB_LINK, "qb-container", colCountQB);
+      fetchAndBuildList(CSV_WR_LINK, "wr-container", colCountWR);
+      fetchAndBuildList(CSV_DB_LINK, "db-container", colCountDB);
+      fetchAndBuildList(CSV_DE_LINK, "de-container", colCountDE);
       showSection("qb-section");
     });
 
-    // Switch between sections
+    // Switch sections
     function switchSection(newSectionId) {
       showSection(newSectionId);
     }
@@ -254,6 +316,7 @@
       });
     }
 
+    // Fade out/in background
     function updateBackground(sectionId) {
       const bgContainer = document.getElementById("bg-container");
       bgContainer.style.opacity = 0;
@@ -263,6 +326,7 @@
       }, 500);
     }
 
+    // Parallax effect
     window.addEventListener('scroll', () => {
       const scrollPos = window.scrollY;
       const factor = 0.3;
@@ -270,34 +334,39 @@
       bgContainer.style.backgroundPosition = `center ${-scrollPos * factor}px`;
     });
 
-    // Build table from CSV using grid layout.
-    function fetchAndBuildList(csvLink, containerId) {
+    /**
+     * Build a grid-based table from the CSV.
+     * @param {string} csvLink  - The CSV URL
+     * @param {string} containerId - The ID of the container to fill
+     * @param {number} colCount - How many CSV columns (excluding rank)
+     */
+    function fetchAndBuildList(csvLink, containerId, colCount) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;
-          const fields = results.meta.fields;
+          const data = results.data;           // array of row objects
+          const fields = results.meta.fields;  // array of column headers
 
           const container = document.getElementById(containerId);
           container.innerHTML = "";
 
-          // Set grid template dynamically: 60px for rank + one fraction per field.
-          const colCount = fields.length; // number of CSV columns
+          // The grid template: 60px for rank, plus colCount columns for data
           const gridTemplate = `60px repeat(${colCount}, 1fr)`;
 
-          // Build heading row
+          // Heading row
           const headingRow = document.createElement("div");
           headingRow.classList.add("heading-row", "fade-in-left");
           headingRow.style.animationDelay = "0s";
           headingRow.style.gridTemplateColumns = gridTemplate;
 
-          // Rank cell header (empty or label as needed)
+          // Rank heading
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
           rankHeading.textContent = "Rank";
           headingRow.appendChild(rankHeading);
 
+          // Build heading cells from fields
           fields.forEach(fieldName => {
             const cell = document.createElement("div");
             cell.classList.add("heading-cell");
@@ -306,7 +375,7 @@
           });
           container.appendChild(headingRow);
 
-          // Build each data row
+          // Data rows
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("player-row", "fade-in-left");
@@ -323,13 +392,14 @@
             else                  rankDiv.classList.add("other");
             rowDiv.appendChild(rankDiv);
 
-            // Data cells
+            // Build data cells
             fields.forEach(fieldName => {
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
-              // If the field is "RATING", then multiply its numeric value by the star emoji.
-              if (fieldName.toUpperCase() === "RATING") {
+
+              // If the column is "STARs", convert numeric to star emojis
+              if (fieldName.toUpperCase() === "STARS") {
                 const ratingValue = parseFloat(rawValue) || 0;
                 cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
               } else {
