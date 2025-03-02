@@ -370,7 +370,7 @@
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               const rawValue = rowObj[fieldName] || "";
-              if (fieldName.toUpperCase() === "RATING") {
+              if (fieldName.toUpperCase() === "STARs") {
                 const ratingValue = parseInt(rawValue, 10) || 0;
                 cellDiv.textContent = "⭐".repeat(ratingValue);
               } else {
