@@ -271,12 +271,12 @@
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
 
-    // We define the # of CSV columns for each position 
-    // (excluding rank) so we can set grid-template-columns properly:
-    const colCountQB = 10; // Example: 10 columns for QB
-    const colCountWR = 9;  // Example: 9 columns for WR
-    const colCountDB = 8;  // Example: 8 columns for DB
-    const colCountDE = 8;  // Example: 8 columns for DE
+    // We define how many columns each CSV has (excluding rank).
+    // If you skip columns, adjust accordingly.
+    const colCountQB = 10; 
+    const colCountWR = 9;  
+    const colCountDB = 8;  
+    const colCountDE = 8;  
 
     // Section IDs
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
@@ -336,102 +336,116 @@
 
     /**
      * Build a grid-based table from the CSV.
-     * @param {string} csvLink  - The CSV URL
-     * @param {string} containerId - The ID of the container to fill
-     * @param {number} colCount - How many CSV columns (excluding rank)
+     * Merges "STARs" into the same cell as "Usernames", second line.
      */
     function fetchAndBuildList(csvLink, containerId, colCount) {
-  fetch(csvLink)
-    .then(response => response.text())
-    .then(csvText => {
-      const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-      const data = results.data;            // row objects
-      let fields = results.meta.fields;     // original column headers
+      fetch(csvLink)
+        .then(response => response.text())
+        .then(csvText => {
+          const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+          const data = results.data;            
+          let fields = results.meta.fields;     
 
-      // 1) Remove the second-last column or any you don't want
-      // 2) Ensure "STARs" is last
-      fields = customReorderFields(fields);
+          // Remove the second-last column or any undesired columns
+          // Then reorder so "STARs" doesn't get its own column
+          // because we'll merge it under "Usernames."
+          fields = customReorderFields(fields);
 
-      // Then continue as usual
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
+          const container = document.getElementById(containerId);
+          container.innerHTML = "";
 
-      // The grid template: 60px for rank, plus as many columns as we have in `fields`
-      const gridTemplate = `60px repeat(${fields.length}, 1fr)`;
+          // Grid template: rank + as many columns as we have in fields
+          const gridTemplate = `60px repeat(${fields.length}, 1fr)`;
 
-      // Build heading row
-      const headingRow = document.createElement("div");
-      headingRow.classList.add("heading-row", "fade-in-left");
-      headingRow.style.gridTemplateColumns = gridTemplate;
-      headingRow.style.animationDelay = "0s";
+          // Heading row
+          const headingRow = document.createElement("div");
+          headingRow.classList.add("heading-row", "fade-in-left");
+          headingRow.style.gridTemplateColumns = gridTemplate;
+          headingRow.style.animationDelay = "0s";
 
-      // Rank heading
-      const rankHeading = document.createElement("div");
-      rankHeading.classList.add("heading-cell", "rank-cell");
-      rankHeading.textContent = "Rank";
-      headingRow.appendChild(rankHeading);
+          // Rank heading
+          const rankHeading = document.createElement("div");
+          rankHeading.classList.add("heading-cell", "rank-cell");
+          rankHeading.textContent = "Rank";
+          headingRow.appendChild(rankHeading);
 
-      // Create heading cells in the new order
-      fields.forEach(fieldName => {
-        const cell = document.createElement("div");
-        cell.classList.add("heading-cell");
-        cell.textContent = fieldName;
-        headingRow.appendChild(cell);
-      });
-      container.appendChild(headingRow);
+          // For each field (except "STARs" if we are merging?), we show heading
+          fields.forEach(fieldName => {
+            // We'll skip "STARs" in the heading if we want to hide that column
+            // because it merges under "Usernames"
+            if (fieldName.toUpperCase() === "STARS") return;
 
-      // Build each data row
-      data.forEach((rowObj, index) => {
-        const rowDiv = document.createElement("div");
-        rowDiv.classList.add("player-row", "fade-in-left");
-        rowDiv.style.gridTemplateColumns = gridTemplate;
-        rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
+            const cell = document.createElement("div");
+            cell.classList.add("heading-cell");
+            cell.textContent = fieldName;
+            headingRow.appendChild(cell);
+          });
+          container.appendChild(headingRow);
 
-        // Rank cell
-        const rankDiv = document.createElement("div");
-        rankDiv.classList.add("player-rank");
-        rankDiv.textContent = index + 1;
-        if (index === 0)      rankDiv.classList.add("top1");
-        else if (index === 1) rankDiv.classList.add("top2");
-        else if (index === 2) rankDiv.classList.add("top3");
-        else                  rankDiv.classList.add("other");
-        rowDiv.appendChild(rankDiv);
+          // Build each data row
+          data.forEach((rowObj, index) => {
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("player-row", "fade-in-left");
+            rowDiv.style.gridTemplateColumns = gridTemplate;
+            rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
 
-        // Create cells in the new order
-        fields.forEach(fieldName => {
-          const cellDiv = document.createElement("div");
-          cellDiv.classList.add("player-cell");
-          let rawValue = rowObj[fieldName] || "";
+            // Rank cell
+            const rankDiv = document.createElement("div");
+            rankDiv.classList.add("player-rank");
+            rankDiv.textContent = index + 1;
+            if (index === 0)      rankDiv.classList.add("top1");
+            else if (index === 1) rankDiv.classList.add("top2");
+            else if (index === 2) rankDiv.classList.add("top3");
+            else                  rankDiv.classList.add("other");
+            rowDiv.appendChild(rankDiv);
 
-          // If the column is "STARs", convert numeric to star emojis
-          if (fieldName.toUpperCase() === "STARS") {
-            const ratingValue = parseFloat(rawValue) || 0;
-            cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
-          } else {
-            cellDiv.textContent = rawValue;
-          }
-          rowDiv.appendChild(cellDiv);
-        });
+            // Now for each field in the new order
+            fields.forEach(fieldName => {
+              if (fieldName.toUpperCase() === "STARS") {
+                // We do NOT create a separate cell for "STARs."
+                // Instead, we merge it into the "Usernames" cell. 
+                return;
+              }
 
-        container.appendChild(rowDiv);
-      });
-    })
-    .catch(err => console.error("Error fetching CSV:", err));
-}
+              const cellDiv = document.createElement("div");
+              cellDiv.classList.add("player-cell");
+              let rawValue = rowObj[fieldName] || "";
 
-function customReorderFields(fields) {
-  // 1) Remove "SomeColumn" or the second-last column you don't want
-  let newFields = fields.filter(f => f !== "SomeColumn");
+              // If it's the "Usernames" field, append star rating below
+              if (fieldName.toUpperCase() === "USERNAMES") {
+                // Check if there's a "STARs" column for this row
+                const starValue = parseFloat(rowObj["STARs"] || 0);
+                const starText = starValue > 0 ? "\n" + "⭐".repeat(Math.floor(starValue)) : "";
+                // Merge username + newline + star rating
+                cellDiv.textContent = rawValue + starText;
+              } else {
+                cellDiv.textContent = rawValue;
+              }
+              rowDiv.appendChild(cellDiv);
+            });
 
-  // 2) Move "STARs" to the end
-  const starIndex = newFields.findIndex(f => f.toUpperCase() === "STARS");
-  if (starIndex >= 0) {
-    const removed = newFields.splice(starIndex, 1);
-    newFields.push(removed[0]);
-  }
-  return newFields;
-}
+            container.appendChild(rowDiv);
+          });
+        })
+        .catch(err => console.error("Error fetching CSV:", err));
+    }
 
+    /**
+     * Example reorder function:
+     *  - Remove the second-last column or any undesired columns
+     *  - Keep "STARs" so we can merge it into "Usernames" but skip it in the actual heading
+     */
+    function customReorderFields(fields) {
+      // Example: remove a known column "SomeColumn" or the second-last column
+      // fields.splice(fields.length - 2, 1); // remove second-last
+      // OR remove any specific column by name
+      fields = fields.filter(f => f !== "SomeColumn");
+
+      // We keep "STARs" in the array, but won't display it as a separate column
+      // because we merge it with "Usernames" in the iteration.
+
+      return fields;
+    }
   </script>
 </body>
 </html>
