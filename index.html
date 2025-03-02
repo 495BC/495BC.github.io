@@ -251,7 +251,7 @@
     <div class="list-container" id="de-container"></div>
   </section>
   <script>
-    // Background images for each stat page (unchanged)
+    // Background images for each stat page
     const bgImages = {
       "qb-section": "https://wallpaperaccess.com/full/1840637.jpg",
       "wr-section": "https://th.bing.com/th/id/R.8909fe74557eb4929c769af4e6cccab5?rik=fWIZE6jl4EAu%2bw&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwp1827787.jpg",
@@ -275,7 +275,7 @@
       }, 500);
     }
 
-    // Parallax-style scroll: as you scroll, adjust vertical position.
+    // Parallax-style scroll: adjust background vertical position as you scroll.
     window.addEventListener('scroll', () => {
       const scrollPos = window.scrollY;
       const factor = 0.3;
@@ -371,8 +371,13 @@
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
               
-              // Do not convert any column; simply output the raw value.
-              cellDiv.textContent = rawValue;
+              // If the field is "RATING", then multiply its numeric value by star emoji.
+              if (fieldName.toUpperCase() === "RATING") {
+                const ratingValue = parseFloat(rawValue) || 0;
+                cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
+              } else {
+                cellDiv.textContent = rawValue;
+              }
               rowDiv.appendChild(cellDiv);
             });
 
