@@ -341,78 +341,97 @@
      * @param {number} colCount - How many CSV columns (excluding rank)
      */
     function fetchAndBuildList(csvLink, containerId, colCount) {
-      fetch(csvLink)
-        .then(response => response.text())
-        .then(csvText => {
-          const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;           // array of row objects
-          const fields = results.meta.fields;  // array of column headers
+  fetch(csvLink)
+    .then(response => response.text())
+    .then(csvText => {
+      const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+      const data = results.data;            // row objects
+      let fields = results.meta.fields;     // original column headers
 
-          const container = document.getElementById(containerId);
-          container.innerHTML = "";
+      // 1) Remove the second-last column or any you don't want
+      // 2) Ensure "STARs" is last
+      fields = customReorderFields(fields);
 
-          // The grid template: 60px for rank, plus colCount columns for data
-          const gridTemplate = `60px repeat(${colCount}, 1fr)`;
+      // Then continue as usual
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
 
-          // Heading row
-          const headingRow = document.createElement("div");
-          headingRow.classList.add("heading-row", "fade-in-left");
-          headingRow.style.animationDelay = "0s";
-          headingRow.style.gridTemplateColumns = gridTemplate;
+      // The grid template: 60px for rank, plus as many columns as we have in `fields`
+      const gridTemplate = `60px repeat(${fields.length}, 1fr)`;
 
-          // Rank heading
-          const rankHeading = document.createElement("div");
-          rankHeading.classList.add("heading-cell", "rank-cell");
-          rankHeading.textContent = "Rank";
-          headingRow.appendChild(rankHeading);
+      // Build heading row
+      const headingRow = document.createElement("div");
+      headingRow.classList.add("heading-row", "fade-in-left");
+      headingRow.style.gridTemplateColumns = gridTemplate;
+      headingRow.style.animationDelay = "0s";
 
-          // Build heading cells from fields
-          fields.forEach(fieldName => {
-            const cell = document.createElement("div");
-            cell.classList.add("heading-cell");
-            cell.textContent = fieldName;
-            headingRow.appendChild(cell);
-          });
-          container.appendChild(headingRow);
+      // Rank heading
+      const rankHeading = document.createElement("div");
+      rankHeading.classList.add("heading-cell", "rank-cell");
+      rankHeading.textContent = "Rank";
+      headingRow.appendChild(rankHeading);
 
-          // Data rows
-          data.forEach((rowObj, index) => {
-            const rowDiv = document.createElement("div");
-            rowDiv.classList.add("player-row", "fade-in-left");
-            rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
-            rowDiv.style.gridTemplateColumns = gridTemplate;
+      // Create heading cells in the new order
+      fields.forEach(fieldName => {
+        const cell = document.createElement("div");
+        cell.classList.add("heading-cell");
+        cell.textContent = fieldName;
+        headingRow.appendChild(cell);
+      });
+      container.appendChild(headingRow);
 
-            // Rank cell
-            const rankDiv = document.createElement("div");
-            rankDiv.classList.add("player-rank");
-            rankDiv.textContent = index + 1;
-            if (index === 0)      rankDiv.classList.add("top1");
-            else if (index === 1) rankDiv.classList.add("top2");
-            else if (index === 2) rankDiv.classList.add("top3");
-            else                  rankDiv.classList.add("other");
-            rowDiv.appendChild(rankDiv);
+      // Build each data row
+      data.forEach((rowObj, index) => {
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("player-row", "fade-in-left");
+        rowDiv.style.gridTemplateColumns = gridTemplate;
+        rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
 
-            // Build data cells
-            fields.forEach(fieldName => {
-              const cellDiv = document.createElement("div");
-              cellDiv.classList.add("player-cell");
-              let rawValue = rowObj[fieldName] || "";
+        // Rank cell
+        const rankDiv = document.createElement("div");
+        rankDiv.classList.add("player-rank");
+        rankDiv.textContent = index + 1;
+        if (index === 0)      rankDiv.classList.add("top1");
+        else if (index === 1) rankDiv.classList.add("top2");
+        else if (index === 2) rankDiv.classList.add("top3");
+        else                  rankDiv.classList.add("other");
+        rowDiv.appendChild(rankDiv);
 
-              // If the column is "STARs", convert numeric to star emojis
-              if (fieldName.toUpperCase() === "STARS") {
-                const ratingValue = parseFloat(rawValue) || 0;
-                cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
-              } else {
-                cellDiv.textContent = rawValue;
-              }
-              rowDiv.appendChild(cellDiv);
-            });
+        // Create cells in the new order
+        fields.forEach(fieldName => {
+          const cellDiv = document.createElement("div");
+          cellDiv.classList.add("player-cell");
+          let rawValue = rowObj[fieldName] || "";
 
-            container.appendChild(rowDiv);
-          });
-        })
-        .catch(err => console.error("Error fetching CSV:", err));
-    }
+          // If the column is "STARs", convert numeric to star emojis
+          if (fieldName.toUpperCase() === "STARS") {
+            const ratingValue = parseFloat(rawValue) || 0;
+            cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
+          } else {
+            cellDiv.textContent = rawValue;
+          }
+          rowDiv.appendChild(cellDiv);
+        });
+
+        container.appendChild(rowDiv);
+      });
+    })
+    .catch(err => console.error("Error fetching CSV:", err));
+}
+
+function customReorderFields(fields) {
+  // 1) Remove "SomeColumn" or the second-last column you don't want
+  let newFields = fields.filter(f => f !== "SomeColumn");
+
+  // 2) Move "STARs" to the end
+  const starIndex = newFields.findIndex(f => f.toUpperCase() === "STARS");
+  if (starIndex >= 0) {
+    const removed = newFields.splice(starIndex, 1);
+    newFields.push(removed[0]);
+  }
+  return newFields;
+}
+
   </script>
 </body>
 </html>
