@@ -316,7 +316,7 @@
       });
     }
 
-    function fetchAndBuildList(csvLink, containerId) {
+  function fetchAndBuildList(csvLink, containerId) {
   fetch(csvLink)
     .then(response => response.text())
     .then(csvText => {
@@ -371,17 +371,9 @@
           cellDiv.classList.add("player-cell");
           let rawValue = rowObj[fieldName] || "";
 
-          // **Convert RATING to Star System**
-          if (fieldName.toUpperCase() === "STARs") {
-            const ratingValue = parseFloat(rawValue) || 0;
-            let stars = "⭐"; // Default to 1 star
-
-            if (ratingValue >= 90) stars = "⭐⭐⭐⭐⭐";
-            else if (ratingValue >= 75) stars = "⭐⭐⭐⭐";
-            else if (ratingValue >= 50) stars = "⭐⭐⭐";
-            else if (ratingValue >= 25) stars = "⭐⭐";
-
-            cellDiv.textContent = stars;
+          // Convert RATING to Stars
+          if (fieldName.toUpperCase() === "STARS") {
+            cellDiv.textContent = convertRatingToStars(parseFloat(rawValue));
           } else {
             cellDiv.textContent = rawValue;
           }
@@ -394,6 +386,17 @@
     })
     .catch(err => console.error("Error fetching CSV:", err));
 }
+
+// Helper function for star conversion
+function convertRatingToStars(ratingValue) {
+  if (isNaN(ratingValue) || ratingValue <= 0) return "✩"; // Empty star
+  if (ratingValue >= 90) return "⭐⭐⭐⭐⭐";
+  if (ratingValue >= 75) return "⭐⭐⭐⭐";
+  if (ratingValue >= 50) return "⭐⭐⭐";
+  if (ratingValue >= 25) return "⭐⭐";
+  return "⭐"; // Default to 1 star for low ratings
+}
+
   </script>
 </body>
 </html>
