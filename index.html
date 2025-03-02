@@ -367,19 +367,21 @@
             rowDiv.appendChild(rankDiv);
 
             fields.forEach(fieldName => {
-              const cellDiv = document.createElement("div");
-              cellDiv.classList.add("player-cell");
-              let rawValue = rowObj[fieldName] || "";
-              
-              // If the field is "RATING", then multiply its numeric value by star emoji.
-              if (fieldName.toUpperCase() === "STARs") {
-                const ratingValue = parseFloat(rawValue) || 0;
-                cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
-              } else {
-                cellDiv.textContent = rawValue;
-              }
-              rowDiv.appendChild(cellDiv);
-            });
+  const cellDiv = document.createElement("div");
+  cellDiv.classList.add("player-cell");
+  let rawValue = rowObj[fieldName] || "";
+
+  // Convert numeric "STARs" to star emojis
+  if (fieldName.toUpperCase() === "STARS") {
+    const ratingValue = parseFloat(rawValue) || 0;
+    cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
+  } else {
+    cellDiv.textContent = rawValue;
+  }
+
+  rowDiv.appendChild(cellDiv);
+});
+
 
             container.appendChild(rowDiv);
           });
