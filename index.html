@@ -251,10 +251,10 @@
     <div class="list-container" id="de-container"></div>
   </section>
   <script>
-    // Background images for each stat page (unchanged)
+    // Background images for each stat page
     const bgImages = {
       "qb-section": "https://wallpaperaccess.com/full/1840637.jpg",
-      "wr-section": "https://th.bing.com/th/id/R.8909fe74557eb4929c769af4e6cccab5?rik=fWIZE6jl4EAu%2bw&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwp1827787.jpg&ehk=8%2fXDqhGB%2fd3yisEHY%2fPuoUF7U9FFQh6k1HRaR20%2bClU%3d&risl=&pid=ImgRaw&r=0",
+      "wr-section": "https://th.bing.com/th/id/R.8909fe74557eb4929c769af4e6cccab5?rik=fWIZE6jl4EAu%2bw&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwp1827787.jpg",
       "db-section": "https://wallpapercave.com/wp/wp2087757.jpg",
       "de-section": "https://w0.peakpx.com/wallpaper/803/1005/HD-wallpaper-las-vegas-raiders-american-football-team-black-stone-background-las-vegas-raiders-logo-grunge-art-nfl-american-football-usa-las-vegas-raiders-emblem.jpg"
     };
@@ -316,87 +316,85 @@
       });
     }
 
-  function fetchAndBuildList(csvLink, containerId) {
-  fetch(csvLink)
-    .then(response => response.text())
-    .then(csvText => {
-      const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-      const data = results.data;
-      const fields = results.meta.fields;
+    function fetchAndBuildList(csvLink, containerId) {
+      fetch(csvLink)
+        .then(response => response.text())
+        .then(csvText => {
+          const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+          const data = results.data;
+          const fields = results.meta.fields;
 
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
+          const container = document.getElementById(containerId);
+          container.innerHTML = "";
 
-      const headingRow = document.createElement("div");
-      headingRow.classList.add("heading-row");
-      headingRow.style.animation = "fadeInLeft 0.5s ease forwards";
-      headingRow.style.animationDelay = "0s";
+          const headingRow = document.createElement("div");
+          headingRow.classList.add("heading-row");
+          headingRow.style.animation = "fadeInLeft 0.5s ease forwards";
+          headingRow.style.animationDelay = "0s";
 
-      const rankHeading = document.createElement("div");
-      rankHeading.classList.add("heading-cell", "rank-cell");
-      rankHeading.textContent = "Rank";
-      headingRow.appendChild(rankHeading);
+          const rankHeading = document.createElement("div");
+          rankHeading.classList.add("heading-cell", "rank-cell");
+          rankHeading.textContent = "Rank";
+          headingRow.appendChild(rankHeading);
 
-      fields.forEach(fieldName => {
-        const cell = document.createElement("div");
-        cell.classList.add("heading-cell");
-        cell.textContent = fieldName;
-        headingRow.appendChild(cell);
-      });
+          fields.forEach(fieldName => {
+            const cell = document.createElement("div");
+            cell.classList.add("heading-cell");
+            cell.textContent = fieldName;
+            headingRow.appendChild(cell);
+          });
 
-      container.appendChild(headingRow);
+          container.appendChild(headingRow);
 
-      data.forEach((rowObj, index) => {
-        const rowDiv = document.createElement("div");
-        rowDiv.classList.add("player-row");
-        rowDiv.style.animation = "fadeInLeft 0.5s ease forwards";
-        rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
+          data.forEach((rowObj, index) => {
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("player-row");
+            rowDiv.style.animation = "fadeInLeft 0.5s ease forwards";
+            rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
 
-        const rankDiv = document.createElement("div");
-        rankDiv.classList.add("player-rank");
-        rankDiv.textContent = index + 1;
-        if (index === 0) {
-          rankDiv.classList.add("top1");
-        } else if (index === 1) {
-          rankDiv.classList.add("top2");
-        } else if (index === 2) {
-          rankDiv.classList.add("top3");
-        } else {
-          rankDiv.classList.add("other");
-        }
-        rowDiv.appendChild(rankDiv);
+            const rankDiv = document.createElement("div");
+            rankDiv.classList.add("player-rank");
+            rankDiv.textContent = index + 1;
+            if (index === 0) {
+              rankDiv.classList.add("top1");
+            } else if (index === 1) {
+              rankDiv.classList.add("top2");
+            } else if (index === 2) {
+              rankDiv.classList.add("top3");
+            } else {
+              rankDiv.classList.add("other");
+            }
+            rowDiv.appendChild(rankDiv);
 
-        fields.forEach(fieldName => {
-          const cellDiv = document.createElement("div");
-          cellDiv.classList.add("player-cell");
-          let rawValue = rowObj[fieldName] || "";
+            fields.forEach(fieldName => {
+              const cellDiv = document.createElement("div");
+              cellDiv.classList.add("player-cell");
+              let rawValue = rowObj[fieldName] || "";
+              
+              // If the field is "STARs" (case-insensitive), convert the numerical RATING to stars.
+              if (fieldName.toUpperCase() === "STARS") {
+                cellDiv.textContent = convertRatingToStars(parseFloat(rawValue));
+              } else {
+                cellDiv.textContent = rawValue;
+              }
+              rowDiv.appendChild(cellDiv);
+            });
 
-          // Convert RATING to Stars
-          if (fieldName.toUpperCase() === "STARS") {
-            cellDiv.textContent = convertRatingToStars(parseFloat(rawValue));
-          } else {
-            cellDiv.textContent = rawValue;
-          }
+            container.appendChild(rowDiv);
+          });
+        })
+        .catch(err => console.error("Error fetching CSV:", err));
+    }
 
-          rowDiv.appendChild(cellDiv);
-        });
-
-        container.appendChild(rowDiv);
-      });
-    })
-    .catch(err => console.error("Error fetching CSV:", err));
-}
-
-// Helper function for star conversion
-function convertRatingToStars(ratingValue) {
-  if (isNaN(ratingValue) || ratingValue <= 0) return "✩"; // Empty star
-  if (ratingValue >= 90) return "⭐⭐⭐⭐⭐";
-  if (ratingValue >= 75) return "⭐⭐⭐⭐";
-  if (ratingValue >= 50) return "⭐⭐⭐";
-  if (ratingValue >= 25) return "⭐⭐";
-  return "⭐"; // Default to 1 star for low ratings
-}
-
+    // Helper function for star conversion
+    function convertRatingToStars(ratingValue) {
+      if (isNaN(ratingValue) || ratingValue <= 0) return "✩"; // Empty star
+      if (ratingValue >= 90) return "⭐⭐⭐⭐⭐";
+      if (ratingValue >= 75) return "⭐⭐⭐⭐";
+      if (ratingValue >= 50) return "⭐⭐⭐";
+      if (ratingValue >= 25) return "⭐⭐";
+      return "⭐"; // Default 1 star for low ratings
+    }
   </script>
 </body>
 </html>
