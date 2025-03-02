@@ -411,14 +411,17 @@
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
 
-              // If it's the "Usernames" field, append star rating below
               if (fieldName.toUpperCase() === "USERNAMES") {
-                // Check if there's a "STARs" column for this row
-                const starValue = parseFloat(rowObj["STARs"] || 0);
-                const starText = starValue > 0 ? "\n" + "⭐".repeat(Math.floor(starValue)) : "";
-                // Merge username + newline + star rating
-                cellDiv.textContent = rawValue + starText;
-              } else {
+  // Grab star rating from the "STARs" column
+  const starValue = parseFloat(rowObj["STARs"] || 0);
+  if (starValue > 0) {
+    // Username + <br> + star emojis
+    cellDiv.innerHTML = rawValue + "<br>" + "⭐".repeat(Math.floor(starValue));
+  } else {
+    cellDiv.textContent = rawValue;
+  }
+} 
+ else {
                 cellDiv.textContent = rawValue;
               }
               rowDiv.appendChild(cellDiv);
