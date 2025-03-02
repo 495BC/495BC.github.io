@@ -41,7 +41,8 @@
       scrollbar-width: thin;
       scrollbar-color: #888 #222;
     }
-    /* Background container */
+
+    /* Background container that sits behind everything */
     #bg-container {
       position: fixed;
       top: 0;
@@ -54,6 +55,7 @@
       transition: opacity 0.5s ease, background-position 0.5s ease-out;
       opacity: 1;
     }
+
     /* MAIN TITLE */
     .main-title {
       background-color: #000;
@@ -65,6 +67,7 @@
       font-size: 2rem;
       color: #fff;
     }
+
     /* NAV BAR */
     .nav-bar {
       background-color: rgba(128,128,128,0.4);
@@ -76,6 +79,7 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
+
     /************************************************
      * NEON BUTTON STYLES WITH CUSTOM COLORS
      ************************************************/
@@ -124,6 +128,7 @@
                   0 0 200px var(--button-neon);
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
+
     /***********************************************
      * STAT PAGE SECTIONS
      ***********************************************/
@@ -141,17 +146,21 @@
       margin-bottom: 1rem;
       color: #fff;
     }
+
     /* Container for the table */
     .list-container {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    /* Grid layout for both header and data rows */
-    .heading-row, .player-row {
+
+    /* We use grid for the heading row and each player row */
+    .heading-row,
+    .player-row {
       display: grid;
-      /* We define 11 columns: 1 for rank and 10 for CSV fields.
-         Adjust "repeat(10, 1fr)" if you have a different number of CSV columns. */
+      /* "Rank" is first column (60px), then the rest auto. 
+         If your CSV has N columns, define N columns here. 
+         E.g. if you have 10 CSV columns + 1 rank = 11 total. */
       grid-template-columns: 60px repeat(10, 1fr);
       gap: 5px;
       align-items: center;
@@ -166,22 +175,19 @@
       background: rgba(0,0,0,0.5);
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
-    /* Header cells */
-    .heading-cell {
+
+    /* The "Rank" cell is the first column, 60px wide from the grid definition. */
+    .rank-cell {
+      text-align: center;
+    }
+
+    /* For heading cells and player cells */
+    .heading-cell, .player-cell {
       padding: 0 10px;
       text-align: left;
     }
-    /* The rank cell in header is empty (to keep alignment) */
-    .heading-cell.rank-cell {
-      width: 60px;
-      flex-shrink: 0;
-    }
-    /* Data cells */
-    .player-cell {
-      padding: 0 10px;
-      text-align: left;
-    }
-    /* Rank cell for each data row */
+
+    /* For the rank cell in the data rows */
     .player-rank {
       text-align: center;
       font-weight: bold;
@@ -192,7 +198,8 @@
     .top2 { border: 2px solid silver; }
     .top3 { border: 2px solid #cd7f32; }
     .other { border: 2px solid #444; }
-    /* Animation Classes */
+
+    /* Animations */
     .fade-in-left {
       animation: fadeInLeft 0.5s ease forwards;
     }
@@ -219,6 +226,7 @@
   <div class="main-title">
     <h1>Raider TC Stats</h1>
   </div>
+
   <!-- NAV BAR -->
   <div class="nav-bar">
     <div class="category-buttons">
@@ -228,6 +236,7 @@
       <a href="#" onclick="switchSection('de-section')" class="de">DE</a>
     </div>
   </div>
+
   <!-- QB SECTION -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
@@ -248,7 +257,7 @@
     <h2>Defensive End Stats</h2>
     <div class="list-container" id="de-container"></div>
   </section>
-  
+
   <script>
     // Background images for each stat page
     const bgImages = {
@@ -262,27 +271,10 @@
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
+
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // Update background when switching sections
-    function updateBackground(newSectionId) {
-      const bgContainer = document.getElementById("bg-container");
-      bgContainer.style.opacity = 0;
-      setTimeout(() => {
-        bgContainer.style.backgroundImage = `url('${bgImages[newSectionId]}')`;
-        bgContainer.style.opacity = 1;
-      }, 500);
-    }
-
-    // Parallax scroll effect
-    window.addEventListener('scroll', () => {
-      const scrollPos = window.scrollY;
-      const factor = 0.3;
-      const bgContainer = document.getElementById("bg-container");
-      bgContainer.style.backgroundPosition = `center ${-scrollPos * factor}px`;
-    });
-
-    // On page load, build tables and show QB section by default
+    // On page load, build all "lists" & show QB by default
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container");
       fetchAndBuildList(CSV_WR_LINK, "wr-container");
@@ -291,11 +283,15 @@
       showSection("qb-section");
     });
 
-    // Function to switch sections with fade in/out
+    // Switch between sections with fade in/out
+    function switchSection(newSectionId) {
+      showSection(newSectionId);
+    }
+
     function showSection(sectionId) {
       updateBackground(sectionId);
       sections.forEach(id => {
-        let secEl = document.getElementById(id);
+        const secEl = document.getElementById(id);
         if (id === sectionId) {
           secEl.style.display = "block";
           secEl.classList.add("fade-in-left");
@@ -313,44 +309,64 @@
       });
     }
 
-    // Build table from CSV using grid layout; header row includes an empty rank cell.
+    // Fade out/in background when switching sections
+    function updateBackground(sectionId) {
+      const bgContainer = document.getElementById("bg-container");
+      bgContainer.style.opacity = 0;
+      setTimeout(() => {
+        bgContainer.style.backgroundImage = `url('${bgImages[sectionId]}')`;
+        bgContainer.style.opacity = 1;
+      }, 500);
+    }
+
+    // Parallax effect for scrolling
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY;
+      const factor = 0.3;
+      const bgContainer = document.getElementById("bg-container");
+      bgContainer.style.backgroundPosition = `center ${-scrollPos * factor}px`;
+    });
+
+    // fetchAndBuildList builds a grid-based table from the CSV
     function fetchAndBuildList(csvLink, containerId) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;
-          const fields = results.meta.fields;
+          const data = results.data;           // array of row objects
+          const fields = results.meta.fields;  // array of column headers
 
           const container = document.getElementById(containerId);
           container.innerHTML = "";
 
-          // Create heading row with an empty rank cell
+          // Build heading row
           const headingRow = document.createElement("div");
           headingRow.classList.add("heading-row", "fade-in-left");
           headingRow.style.animationDelay = "0s";
 
-          // Empty rank cell for header
+          // "Rank" cell in heading
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
-          rankHeading.textContent = ""; // Blank header for index
+          rankHeading.textContent = "Rank";
           headingRow.appendChild(rankHeading);
 
+          // For each CSV field, create a heading cell
           fields.forEach(fieldName => {
             const cell = document.createElement("div");
             cell.classList.add("heading-cell");
             cell.textContent = fieldName;
             headingRow.appendChild(cell);
           });
+
           container.appendChild(headingRow);
 
-          // Build each data row; include rank cell with animation
+          // Now build each data row
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("player-row", "fade-in-left");
             rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
 
-            // Rank cell with index, tweened in from left
+            // Rank cell
             const rankDiv = document.createElement("div");
             rankDiv.classList.add("player-rank");
             rankDiv.textContent = index + 1;
@@ -360,13 +376,14 @@
             else                  rankDiv.classList.add("other");
             rowDiv.appendChild(rankDiv);
 
+            // For each field, create a player-cell
             fields.forEach(fieldName => {
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
-              
-              // If the field is "RATING", multiply its numeric value by the star emoji
-              if (fieldName.toUpperCase() === "RATING") {
+
+              // If the column is "STARs", convert numeric to star emojis
+              if (fieldName.toUpperCase() === "STARS") {
                 const ratingValue = parseFloat(rawValue) || 0;
                 cellDiv.textContent = "⭐".repeat(Math.floor(ratingValue));
               } else {
