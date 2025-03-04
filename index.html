@@ -118,13 +118,16 @@
       gap: 10px;
     }
 
-    /* Grid layout for heading & data rows */
+    /* Grid layout for heading & data rows.
+       Start hidden so that they only appear via animation */
     .heading-row, .player-row {
       display: grid;
       gap: 5px;
       align-items: center;
       padding: 10px;
       border-radius: 5px;
+      opacity: 0;
+      visibility: hidden;
     }
     .heading-row { background: rgba(0,0,0,0.7); font-weight: bold; }
     .player-row { background: rgba(0,0,0,0.5); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
@@ -139,15 +142,13 @@
     .other { border: 2px solid #444; }
 
     /* Animations */
-    /* Initial load (tower build): rows slide in from above */
     @keyframes slideInDown {
-      0% { opacity: 0; transform: translateY(-50px); }
-      100% { opacity: 1; transform: translateY(0); }
+      0% { opacity: 0; transform: translateY(-50px); visibility: hidden; }
+      100% { opacity: 1; transform: translateY(0); visibility: visible; }
     }
     .slide-in-down {
       animation: slideInDown 0.5s ease forwards;
     }
-    /* Transition out: current section slides out to left */
     @keyframes slideOutLeft {
       0% { opacity: 1; transform: translateX(0); }
       100% { opacity: 0; transform: translateX(-100%); }
@@ -155,15 +156,14 @@
     .slide-out-left {
       animation: slideOutLeft 0.5s ease forwards;
     }
-    /* Transition in: new section slides in from right */
     @keyframes slideInRight {
-      0% { opacity: 0; transform: translateX(100%); }
-      100% { opacity: 1; transform: translateX(0); }
+      0% { opacity: 0; transform: translateX(100%); visibility: hidden; }
+      100% { opacity: 1; transform: translateX(0); visibility: visible; }
     }
     .slide-in-right {
       animation: slideInRight 0.5s ease forwards;
     }
-    /* Background slide transition */
+    /* Background slide animation */
     @keyframes bgSlide {
       0% { opacity: 0; transform: translateX(100%); }
       100% { opacity: 1; transform: translateX(0); }
@@ -292,7 +292,7 @@
       bgContainer.style.transform = "translateX(-100%)";
       bgContainer.style.opacity = 0;
       setTimeout(() => {
-        bgContainer.style.backgroundImage = url('${bgImages[sectionId]}');
+        bgContainer.style.backgroundImage = `url('${bgImages[sectionId]}')`;
         bgContainer.style.transform = "translateX(100%)";
         setTimeout(() => {
           bgContainer.style.transform = "translateX(0)";
@@ -306,7 +306,7 @@
       const scrollPos = window.scrollY;
       const factor = 0.3;
       const bgContainer = document.getElementById("bg-container");
-      bgContainer.style.backgroundPosition = center ${-scrollPos * factor}px;
+      bgContainer.style.backgroundPosition = `center ${-scrollPos * factor}px`;
     });
 
     /**
@@ -331,7 +331,7 @@
           container.innerHTML = "";
 
           // Grid template: rank column + one column for each display field.
-          const gridTemplate = 60px repeat(${displayFields.length}, 1fr);
+          const gridTemplate = `60px repeat(${displayFields.length}, 1fr)`;
 
           // Build heading row.
           const headingRow = document.createElement("div");
@@ -400,8 +400,7 @@
      * In this example, we remove "SomeColumn" if present.
      */
     function customReorderFields(fields) {
-      fields = fields.filter(f => f !== "SomeColumn");
-      return fields;
+      return fields.filter(f => f !== "SomeColumn");
     }
   </script>
 </body>
