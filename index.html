@@ -24,10 +24,10 @@
     /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 12px; }
     ::-webkit-scrollbar-track { background: #222; }
-    ::-webkit-scrollbar-thumb {
-      background-color: #888;
-      border-radius: 6px;
-      border: 3px solid #222;
+    ::-webkit-scrollbar-thumb { 
+      background-color: #888; 
+      border-radius: 6px; 
+      border: 3px solid #222; 
     }
     ::-webkit-scrollbar-thumb:hover { background-color: #aaa; }
     html { scrollbar-width: thin; scrollbar-color: #888 #222; }
@@ -42,7 +42,8 @@
       z-index: -1;
       background-size: cover;
       background-position: center;
-      transition: opacity 0.5s ease, background-position 0.5s ease-out;
+      /* We'll animate transform for slide effect */
+      transition: transform 0.5s ease, opacity 0.5s ease;
       opacity: 1;
     }
     
@@ -66,13 +67,8 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
-    /************************************************
-     * NEON BUTTON STYLES WITH CUSTOM COLORS
-     ************************************************/
-    .category-buttons {
-      display: flex;
-      gap: 1rem;
-    }
+    /* Neon Button Styles */
+    .category-buttons { display: flex; gap: 1rem; }
     .category-buttons a {
       position: relative;
       display: inline-flex;
@@ -103,9 +99,7 @@
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
     
-    /***********************************************
-     * STAT PAGE SECTIONS
-     ***********************************************/
+    /* STAT PAGE SECTIONS */
     section {
       display: none;
       background-color: rgba(34,34,34,0.85);
@@ -119,13 +113,9 @@
     section h2 { margin-bottom: 1rem; color: #fff; }
     
     /* Table container */
-    .list-container {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .list-container { display: flex; flex-direction: column; gap: 10px; }
     
-    /* Grid layout for heading and data rows */
+    /* Grid layout for heading & data rows */
     .heading-row, .player-row {
       display: grid;
       gap: 5px;
@@ -138,7 +128,7 @@
     
     /* Cells */
     .heading-cell, .player-cell { padding: 0 10px; text-align: left; }
-    /* Rank cell (first column) */
+    /* Rank cell */
     .heading-cell.rank-cell, .player-rank { width: 60px; text-align: center; }
     .player-rank { font-weight: bold; background: #000; border-radius: 5px; }
     .top1 { border: 2px solid gold; }
@@ -146,19 +136,40 @@
     .top3 { border: 2px solid #cd7f32; }
     .other { border: 2px solid #444; }
     
-    /* Animations */
-    .fade-in-left { animation: fadeInLeft 0.5s ease forwards; }
-    .fade-out-left { animation: fadeOutLeft 0.5s ease forwards; }
-    @keyframes fadeInLeft {
-      0% { opacity: 0; transform: translateX(-50px); }
+    /* Animations for initial build (tower effect) */
+    @keyframes slideInDown {
+      0% { opacity: 0; transform: translateY(-50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .slide-in-down {
+      animation: slideInDown 0.5s ease forwards;
+    }
+    
+    /* Animations for section transition: slide out left */
+    @keyframes slideOutLeft {
+      0% { opacity: 1; transform: translateX(0); }
+      100% { opacity: 0; transform: translateX(-100%); }
+    }
+    .slide-out-left {
+      animation: slideOutLeft 0.5s ease forwards;
+    }
+    
+    /* Animation for section transition: slide in from right */
+    @keyframes slideInRight {
+      0% { opacity: 0; transform: translateX(100%); }
       100% { opacity: 1; transform: translateX(0); }
     }
-    @keyframes fadeOutLeft {
-      0% { opacity: 1; transform: translateX(0); }
-      100% { opacity: 0; transform: translateX(-50px); }
+    .slide-in-right {
+      animation: slideInRight 0.5s ease forwards;
+    }
+    
+    /* Background slide animation for transition */
+    @keyframes bgSlideIn {
+      0% { opacity: 0; transform: translateX(100%); }
+      100% { opacity: 1; transform: translateX(0); }
     }
   </style>
-  <!-- Papa Parse via CDN -->
+  <!-- Papa Parse -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 </head>
 <body>
@@ -219,44 +230,53 @@
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
 
-    // Define how many CSV columns (excluding the rank cell) each position has.
-    // Since we are merging "STARs" with "Usernames", the displayed count is one less.
-    const colCountQB = 10;  // Adjust as needed for QB CSV minus STARs column.
-    const colCountWR = 9;   // Adjust as needed for WR CSV minus STARs.
-    const colCountDB = 8;   // Adjust as needed for DB CSV minus STARs.
-    const colCountDE = 8;   // Adjust as needed for DE CSV minus STARs.
+    // Define how many columns each CSV has (excluding rank) after merging STARs with Usernames.
+    // Adjust these counts based on your actual CSV headers.
+    const colCountQB = 10; 
+    const colCountWR = 9;  
+    const colCountDB = 8;  
+    const colCountDE = 8;  
 
     // Section IDs
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On DOM load, build tables and show QB by default.
+    // On DOM load, build all tables & show QB by default
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container", colCountQB);
       fetchAndBuildList(CSV_WR_LINK, "wr-container", colCountWR);
       fetchAndBuildList(CSV_DB_LINK, "db-container", colCountDB);
       fetchAndBuildList(CSV_DE_LINK, "de-container", colCountDE);
-      showSection("qb-section");
+      showSection("qb-section", true);
     });
 
-    // Switch sections.
+    // Switch sections with slide transition
     function switchSection(newSectionId) {
-      showSection(newSectionId);
+      showSection(newSectionId, false);
     }
 
-    function showSection(sectionId) {
+    // Show a section with animations.
+    // If initial is true, use slideInDown (tower build); otherwise, use slide transitions.
+    function showSection(sectionId, initial) {
       updateBackground(sectionId);
       sections.forEach(id => {
         let secEl = document.getElementById(id);
         if (id === sectionId) {
           secEl.style.display = "block";
-          secEl.classList.add("fade-in-left");
+          if (initial) {
+            // Build tower: each row slides in downwards (handled by row animation)
+            secEl.classList.add("slide-in-down");
+          } else {
+            // New section: slide in from right
+            secEl.classList.remove("slide-out-left");
+            secEl.classList.add("slide-in-right");
+          }
         } else {
           if (secEl.style.display === "block") {
-            secEl.classList.remove("fade-in-left");
-            secEl.classList.add("fade-out-left");
+            secEl.classList.remove("slide-in-right", "slide-in-down");
+            secEl.classList.add("slide-out-left");
             secEl.addEventListener("animationend", function handler() {
               secEl.style.display = "none";
-              secEl.classList.remove("fade-out-left");
+              secEl.classList.remove("slide-out-left");
               secEl.removeEventListener("animationend", handler);
             });
           }
@@ -264,13 +284,20 @@
       });
     }
 
-    // Fade background in/out when switching sections.
+    // Update background with slide transition
     function updateBackground(sectionId) {
       const bgContainer = document.getElementById("bg-container");
+      // Slide out current background to left
+      bgContainer.style.transform = "translateX(-100%)";
       bgContainer.style.opacity = 0;
       setTimeout(() => {
         bgContainer.style.backgroundImage = `url('${bgImages[sectionId]}')`;
-        bgContainer.style.opacity = 1;
+        // Slide in new background from right
+        bgContainer.style.transform = "translateX(100%)";
+        setTimeout(() => {
+          bgContainer.style.transform = "translateX(0)";
+          bgContainer.style.opacity = 1;
+        }, 50);
       }, 500);
     }
 
@@ -284,41 +311,41 @@
 
     /**
      * Build a grid-based table from the CSV.
-     * Merges the "STARs" column with "Usernames" (star rating appears on a new line below the username).
-     * The header row does not include a separate "STARs" column.
+     * Merges "STARs" into the same cell as "Usernames" (appearing on a new line).
+     * The header row excludes a separate STARs column.
      * @param {string} csvLink - The CSV URL.
      * @param {string} containerId - The container element ID.
-     * @param {number} colCount - Number of CSV columns (excluding the rank cell) after removing "STARs".
+     * @param {number} colCount - Number of CSV columns (excluding rank) after merging STARs.
      */
     function fetchAndBuildList(csvLink, containerId, colCount) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;  // row objects
-          // Get original fields from CSV then reorder if needed.
-          let originalFields = customReorderFields(results.meta.fields);
-          // For header display, remove "STARs" column.
-          let displayFields = originalFields.filter(f => f.toUpperCase() !== "STARS");
-
+          const data = results.data;            
+          let fields = customReorderFields(results.meta.fields);
+          
+          // Build displayFields: remove STARs (it will be merged with Usernames)
+          let displayFields = fields.filter(f => f.toUpperCase() !== "STARS");
+          
           const container = document.getElementById(containerId);
           container.innerHTML = "";
-
-          // Build grid template: 60px for rank + displayFields.length columns.
+          
+          // Grid template: 60px for rank + displayFields.length columns.
           const gridTemplate = `60px repeat(${displayFields.length}, 1fr)`;
-
+          
           // Build heading row.
           const headingRow = document.createElement("div");
-          headingRow.classList.add("heading-row", "fade-in-left");
+          headingRow.classList.add("heading-row");
+          // For initial load, no animation on header.
           headingRow.style.gridTemplateColumns = gridTemplate;
-          headingRow.style.animationDelay = "0s";
-
-          // Rank heading cell (blank so index isn't shown in header).
+          
+          // Rank heading cell (blank)
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
           rankHeading.textContent = "";
           headingRow.appendChild(rankHeading);
-
+          
           // Create header cells from displayFields.
           displayFields.forEach(fieldName => {
             const cell = document.createElement("div");
@@ -327,15 +354,15 @@
             headingRow.appendChild(cell);
           });
           container.appendChild(headingRow);
-
+          
           // Build each data row.
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
-            rowDiv.classList.add("player-row", "fade-in-left");
+            rowDiv.classList.add("player-row", "slide-in-down");
             rowDiv.style.gridTemplateColumns = gridTemplate;
             rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
-
-            // Create rank cell.
+            
+            // Rank cell.
             const rankDiv = document.createElement("div");
             rankDiv.classList.add("player-rank");
             rankDiv.textContent = index + 1;
@@ -344,18 +371,17 @@
             else if (index === 2) rankDiv.classList.add("top3");
             else                  rankDiv.classList.add("other");
             rowDiv.appendChild(rankDiv);
-
+            
             // For each field in displayFields.
             displayFields.forEach(fieldName => {
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
-
-              // If this is the "Usernames" column, merge star rating (from originalFields) underneath.
+              
               if (fieldName.toUpperCase() === "USERNAMES") {
+                // Merge star rating underneath username.
                 const starValue = parseFloat(rowObj["STARs"] || 0);
                 if (starValue > 0) {
-                  // Use innerHTML with a <br> tag for a line break.
                   cellDiv.innerHTML = rawValue + "<br>" + "⭐".repeat(Math.floor(starValue));
                 } else {
                   cellDiv.textContent = rawValue;
@@ -374,11 +400,9 @@
     /**
      * customReorderFields:
      * Remove any unwanted columns.
-     * Ensure "STARs" remains in the originalFields array (for merging)
-     * but will be filtered out of displayFields.
+     * In this example, we remove "SomeColumn" if present.
      */
     function customReorderFields(fields) {
-      // Example: Remove a specific column by name if needed.
       fields = fields.filter(f => f !== "SomeColumn");
       return fields;
     }
