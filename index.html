@@ -119,7 +119,7 @@
     }
 
     /* Grid layout for heading & data rows.
-       Start hidden so that they only appear via animation */
+       Start hidden so they only appear via animation */
     .heading-row, .player-row {
       display: grid;
       gap: 5px;
@@ -338,6 +338,9 @@
           headingRow.classList.add("heading-row");
           headingRow.style.gridTemplateColumns = gridTemplate;
           headingRow.style.animationDelay = "0s";
+          // Add animation to show the header row.
+          headingRow.classList.add(initialLoad ? "slide-in-down" : "slide-in-right");
+
           // Rank header cell (blank)
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
