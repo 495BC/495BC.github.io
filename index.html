@@ -7,7 +7,11 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* Basic Reset & Body */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'IBM Plex Sans', sans-serif;
       background: #111;
@@ -17,25 +21,31 @@
       overflow-x: hidden;
       position: relative;
     }
-    /* Custom Scrollbar */
+    /* Custom Scrollbar Styles */
     ::-webkit-scrollbar { width: 12px; }
     ::-webkit-scrollbar-track { background: #222; }
-    ::-webkit-scrollbar-thumb { background-color: #888; border-radius: 6px; border: 3px solid #222; }
+    ::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 6px;
+      border: 3px solid #222;
+    }
     ::-webkit-scrollbar-thumb:hover { background-color: #aaa; }
     html { scrollbar-width: thin; scrollbar-color: #888 #222; }
-    
+
     /* Background container */
     #bg-container {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: -1;
       background-size: cover;
       background-position: center;
       transition: transform 0.5s ease, opacity 0.5s ease;
       opacity: 1;
     }
-    
+
     /* MAIN TITLE */
     .main-title {
       background-color: #000;
@@ -44,7 +54,7 @@
       margin-bottom: 1rem;
     }
     .main-title h1 { font-size: 2rem; color: #fff; }
-    
+
     /* NAV BAR */
     .nav-bar {
       background-color: rgba(128,128,128,0.4);
@@ -87,7 +97,7 @@
                   0 0 200px var(--button-neon);
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
-    
+
     /* STAT PAGE SECTIONS */
     section {
       display: none;
@@ -98,17 +108,16 @@
       max-width: 90%;
       transform: translateX(-50px);
       opacity: 0;
-      visibility: hidden;
     }
     section h2 { margin-bottom: 1rem; color: #fff; }
-    
+
     /* Table container */
     .list-container {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    
+
     /* Grid layout for heading & data rows */
     .heading-row, .player-row {
       display: grid;
@@ -116,12 +125,10 @@
       align-items: center;
       padding: 10px;
       border-radius: 5px;
-      opacity: 0;
-      visibility: hidden;
     }
     .heading-row { background: rgba(0,0,0,0.7); font-weight: bold; }
     .player-row { background: rgba(0,0,0,0.5); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    
+
     /* Cells */
     .heading-cell, .player-cell { padding: 0 10px; text-align: left; }
     .heading-cell.rank-cell, .player-rank { width: 60px; text-align: center; }
@@ -130,42 +137,37 @@
     .top2 { border: 2px solid silver; }
     .top3 { border: 2px solid #cd7f32; }
     .other { border: 2px solid #444; }
-    
-    /* Animation for initial build: rows slide in from above */
-    @keyframes towerBuild {
-      0% { opacity: 0; transform: translateY(-50px); visibility: hidden; }
-      100% { opacity: 1; transform: translateY(0); visibility: visible; }
-    }
-    .tower-build {
-      animation: towerBuild 0.5s ease forwards;
-    }
-    
-    /* Missing slide-in-down animation */
+
+    /* Animations */
+    /* Initial load (tower build): rows slide in from above */
     @keyframes slideInDown {
       0% { opacity: 0; transform: translateY(-50px); }
       100% { opacity: 1; transform: translateY(0); }
     }
-    .slide-in-down { animation: slideInDown 0.5s ease forwards; }
-    
-    /* Transition animations for section switching */
+    .slide-in-down {
+      animation: slideInDown 0.5s ease forwards;
+    }
+    /* Transition out: current section slides out to left */
     @keyframes slideOutLeft {
       0% { opacity: 1; transform: translateX(0); }
       100% { opacity: 0; transform: translateX(-100%); }
     }
-    .slide-out-left { animation: slideOutLeft 0.5s ease forwards; }
-    
+    .slide-out-left {
+      animation: slideOutLeft 0.5s ease forwards;
+    }
+    /* Transition in: new section slides in from right */
     @keyframes slideInRight {
       0% { opacity: 0; transform: translateX(100%); }
       100% { opacity: 1; transform: translateX(0); }
     }
-    .slide-in-right { animation: slideInRight 0.5s ease forwards; }
-    
-    /* Section fade in */
-    @keyframes sectionFadeIn {
-      0% { opacity: 0; visibility: hidden; }
-      100% { opacity: 1; visibility: visible; }
+    .slide-in-right {
+      animation: slideInRight 0.5s ease forwards;
     }
-    .section-visible { animation: sectionFadeIn 0.5s ease forwards; }
+    /* Background slide transition */
+    @keyframes bgSlide {
+      0% { opacity: 0; transform: translateX(100%); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
 </head>
@@ -213,8 +215,9 @@
   </section>
   
   <script>
-    let initialLoad = true; // true for initial tower build, then false.
-
+    // Global flag: true for initial load, then false.
+    let initialLoad = true;
+    
     // Background images for each section.
     const bgImages = {
       "qb-section": "https://wallpaperaccess.com/full/1840637.jpg",
@@ -223,22 +226,22 @@
       "de-section": "https://w0.peakpx.com/wallpaper/803/1005/HD-wallpaper-las-vegas-raiders-american-football-team-black-stone-background-las-vegas-raiders-logo-grunge-art-nfl-american-football-usa-las-vegas-raiders-emblem.jpg"
     };
 
-    // CSV links.
+    // CSV links
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
 
-    // Define the number of CSV columns for each stat page (excluding the rank cell)
-    // After merging "STARs" with "Usernames", adjust accordingly.
+    // Define column counts for each CSV (excluding rank cell, and after merging STARs with Usernames).
     const colCountQB = 10;
     const colCountWR = 9;
     const colCountDB = 8;
     const colCountDE = 8;
 
+    // Section IDs
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On DOM load, build the tables and show QB section.
+    // On DOM load, build all lists and show QB section by default.
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container", colCountQB);
       fetchAndBuildList(CSV_WR_LINK, "wr-container", colCountWR);
@@ -248,30 +251,26 @@
       initialLoad = false;
     });
 
-    // Switch sections.
+    // Switch sections with slide transitions.
     function switchSection(newSectionId) {
       showSection(newSectionId, false);
     }
 
-    // Show section with transitions:
-    // - New section slides in from right.
-    // - Old section slides out to left.
-    // - Hide the list entirely until animation starts.
+    // Show section with appropriate animation.
+    // If isInitial is true, use slideInDown (tower build). Otherwise, slide in from right.
     function showSection(sectionId, isInitial) {
       updateBackground(sectionId);
       sections.forEach(id => {
         let secEl = document.getElementById(id);
         if (id === sectionId) {
           secEl.style.display = "block";
-          // Hide content immediately.
-          secEl.style.visibility = "hidden";
-          secEl.style.opacity = 0;
-          // Delay to ensure the previous section is completely hidden.
-          setTimeout(() => {
-            secEl.classList.remove("slide-out-left", "slide-in-right", "slide-in-down");
-            secEl.classList.add(isInitial ? "slide-in-down" : "slide-in-right");
-            secEl.style.visibility = "visible";
-          }, 100);
+          if (isInitial) {
+            secEl.classList.remove("slide-in-right", "slide-out-left");
+            secEl.classList.add("slide-in-down");
+          } else {
+            secEl.classList.remove("slide-out-left", "slide-in-down");
+            secEl.classList.add("slide-in-right");
+          }
         } else {
           if (secEl.style.display === "block") {
             secEl.classList.remove("slide-in-right", "slide-in-down");
@@ -286,13 +285,14 @@
       });
     }
 
-    // Update background with slide transition.
+    // Update background with slide animation.
     function updateBackground(sectionId) {
       const bgContainer = document.getElementById("bg-container");
+      // Slide current background out to left.
       bgContainer.style.transform = "translateX(-100%)";
       bgContainer.style.opacity = 0;
       setTimeout(() => {
-        bgContainer.style.backgroundImage = `url('${bgImages[sectionId]}')`;
+        bgContainer.style.backgroundImage = url('${bgImages[sectionId]}');
         bgContainer.style.transform = "translateX(100%)";
         setTimeout(() => {
           bgContainer.style.transform = "translateX(0)";
@@ -301,18 +301,18 @@
       }, 500);
     }
 
-    // Parallax effect.
+    // Parallax effect for scrolling.
     window.addEventListener('scroll', () => {
       const scrollPos = window.scrollY;
       const factor = 0.3;
       const bgContainer = document.getElementById("bg-container");
-      bgContainer.style.backgroundPosition = `center ${-scrollPos * factor}px`;
+      bgContainer.style.backgroundPosition = center ${-scrollPos * factor}px;
     });
 
     /**
      * Build a grid-based table from the CSV.
-     * Merges the "STARs" column with the "Usernames" cell (star rating on a new line).
-     * The header row excludes a separate "STARs" column.
+     * Merges "STARs" into the same cell as "Usernames" (star rating on a new line).
+     * The header row excludes a separate STARs column.
      * @param {string} csvLink - The CSV URL.
      * @param {string} containerId - The container element ID.
      * @param {number} colCount - Number of CSV columns (excluding rank) after merging STARs.
@@ -324,30 +324,26 @@
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
           const data = results.data;
           let fields = customReorderFields(results.meta.fields);
-          // Remove "STARs" from the display fields.
+          // Build displayFields: remove STARs from separate display.
           let displayFields = fields.filter(f => f.toUpperCase() !== "STARS");
 
           const container = document.getElementById(containerId);
           container.innerHTML = "";
 
-          // Grid template: rank (60px) + displayFields.
-          const gridTemplate = `60px repeat(${displayFields.length}, 1fr)`;
+          // Grid template: rank column + one column for each display field.
+          const gridTemplate = 60px repeat(${displayFields.length}, 1fr);
 
           // Build heading row.
           const headingRow = document.createElement("div");
           headingRow.classList.add("heading-row");
           headingRow.style.gridTemplateColumns = gridTemplate;
           headingRow.style.animationDelay = "0s";
-          // Apply animation so the heading row becomes visible.
-          headingRow.classList.add(initialLoad ? "slide-in-down" : "slide-in-right");
-
-          // Rank header (blank).
+          // Rank header cell (blank)
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
           rankHeading.textContent = "";
           headingRow.appendChild(rankHeading);
-
-          // Build header cells for each field.
+          // Create header cells for each display field.
           displayFields.forEach(fieldName => {
             const cell = document.createElement("div");
             cell.classList.add("heading-cell");
@@ -360,7 +356,7 @@
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("player-row");
-            // Use different animation for initial load vs transition.
+            // Choose animation based on initial load vs transition.
             rowDiv.classList.add(initialLoad ? "slide-in-down" : "slide-in-right");
             rowDiv.style.gridTemplateColumns = gridTemplate;
             rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
@@ -375,12 +371,12 @@
             else                  rankDiv.classList.add("other");
             rowDiv.appendChild(rankDiv);
 
-            // Build cells for each display field.
+            // Create cells for each display field.
             displayFields.forEach(fieldName => {
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
-              
+              // If it's the "Usernames" field, merge the STARs value beneath it.
               if (fieldName.toUpperCase() === "USERNAMES") {
                 const starValue = parseFloat(rowObj["STARs"] || 0);
                 if (starValue > 0) {
@@ -400,12 +396,12 @@
     }
 
     /**
-     * customReorderFields:
-     * Remove unwanted columns.
-     * In this example, we remove a column named "SomeColumn" if present.
+     * customReorderFields: Remove any unwanted columns.
+     * In this example, we remove "SomeColumn" if present.
      */
     function customReorderFields(fields) {
-      return fields.filter(f => f !== "SomeColumn");
+      fields = fields.filter(f => f !== "SomeColumn");
+      return fields;
     }
   </script>
 </body>
