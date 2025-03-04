@@ -140,6 +140,13 @@
       animation: towerBuild 0.5s ease forwards;
     }
     
+    /* Missing slide-in-down animation */
+    @keyframes slideInDown {
+      0% { opacity: 0; transform: translateY(-50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .slide-in-down { animation: slideInDown 0.5s ease forwards; }
+    
     /* Transition animations for section switching */
     @keyframes slideOutLeft {
       0% { opacity: 1; transform: translateX(0); }
@@ -331,6 +338,8 @@
           headingRow.classList.add("heading-row");
           headingRow.style.gridTemplateColumns = gridTemplate;
           headingRow.style.animationDelay = "0s";
+          // Apply animation so the heading row becomes visible.
+          headingRow.classList.add(initialLoad ? "slide-in-down" : "slide-in-right");
 
           // Rank header (blank).
           const rankHeading = document.createElement("div");
