@@ -21,27 +21,18 @@
       overflow-x: hidden;
       position: relative;
     }
-    /* Custom Scrollbar Styles (WebKit & Firefox) */
-    ::-webkit-scrollbar {
-      width: 12px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #222;
-    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 12px; }
+    ::-webkit-scrollbar-track { background: #222; }
     ::-webkit-scrollbar-thumb {
       background-color: #888;
       border-radius: 6px;
       border: 3px solid #222;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: #aaa;
-    }
-    html {
-      scrollbar-width: thin;
-      scrollbar-color: #888 #222;
-    }
-
-    /* Background container behind everything */
+    ::-webkit-scrollbar-thumb:hover { background-color: #aaa; }
+    html { scrollbar-width: thin; scrollbar-color: #888 #222; }
+    
+    /* Background container */
     #bg-container {
       position: fixed;
       top: 0;
@@ -54,7 +45,7 @@
       transition: opacity 0.5s ease, background-position 0.5s ease-out;
       opacity: 1;
     }
-
+    
     /* MAIN TITLE */
     .main-title {
       background-color: #000;
@@ -62,11 +53,8 @@
       padding: 1rem;
       margin-bottom: 1rem;
     }
-    .main-title h1 {
-      font-size: 2rem;
-      color: #fff;
-    }
-
+    .main-title h1 { font-size: 2rem; color: #fff; }
+    
     /* NAV BAR */
     .nav-bar {
       background-color: rgba(128,128,128,0.4);
@@ -78,7 +66,6 @@
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
-
     /************************************************
      * NEON BUTTON STYLES WITH CUSTOM COLORS
      ************************************************/
@@ -102,22 +89,10 @@
       height: 60px;
       aspect-ratio: 3 / 1;
     }
-    .category-buttons a.qb {
-      color: #8A2BE2;
-      --button-neon: #8A2BE2;
-    }
-    .category-buttons a.wr {
-      color: #03e9f4;
-      --button-neon: #03e9f4;
-    }
-    .category-buttons a.db {
-      color: #8B0000;
-      --button-neon: #8B0000;
-    }
-    .category-buttons a.de {
-      color: #FFA500;
-      --button-neon: #FFA500;
-    }
+    .category-buttons a.qb { color: #8A2BE2; --button-neon: #8A2BE2; }
+    .category-buttons a.wr { color: #03e9f4; --button-neon: #03e9f4; }
+    .category-buttons a.db { color: #8B0000; --button-neon: #8B0000; }
+    .category-buttons a.de { color: #FFA500; --button-neon: #FFA500; }
     .category-buttons a:hover {
       background: var(--button-neon);
       color: #fff;
@@ -127,7 +102,7 @@
                   0 0 200px var(--button-neon);
       -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
     }
-
+    
     /***********************************************
      * STAT PAGE SECTIONS
      ***********************************************/
@@ -141,66 +116,39 @@
       transform: translateX(-50px);
       opacity: 0;
     }
-    section h2 {
-      margin-bottom: 1rem;
-      color: #fff;
-    }
-
-    /* Container for the table */
+    section h2 { margin-bottom: 1rem; color: #fff; }
+    
+    /* Table container */
     .list-container {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-
-    /* We use grid for the heading row and each player row */
-    .heading-row,
-    .player-row {
+    
+    /* Grid layout for heading and data rows */
+    .heading-row, .player-row {
       display: grid;
       gap: 5px;
       align-items: center;
       padding: 10px;
       border-radius: 5px;
     }
-    .heading-row {
-      background: rgba(0,0,0,0.7);
-      font-weight: bold;
-    }
-    .player-row {
-      background: rgba(0,0,0,0.5);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-
-    /* The "Rank" cell is the first column, 60px wide from the grid definition. */
-    .rank-cell {
-      text-align: center;
-    }
-
-    /* For heading cells and player cells */
-    .heading-cell, .player-cell {
-      padding: 0 10px;
-      text-align: left;
-    }
-
-    /* For the rank cell in the data rows */
-    .player-rank {
-      text-align: center;
-      font-weight: bold;
-      background: #000;
-      border-radius: 5px;
-    }
+    .heading-row { background: rgba(0,0,0,0.7); font-weight: bold; }
+    .player-row { background: rgba(0,0,0,0.5); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    
+    /* Cells */
+    .heading-cell, .player-cell { padding: 0 10px; text-align: left; }
+    /* Rank cell (first column) */
+    .heading-cell.rank-cell, .player-rank { width: 60px; text-align: center; }
+    .player-rank { font-weight: bold; background: #000; border-radius: 5px; }
     .top1 { border: 2px solid gold; }
     .top2 { border: 2px solid silver; }
     .top3 { border: 2px solid #cd7f32; }
     .other { border: 2px solid #444; }
-
+    
     /* Animations */
-    .fade-in-left {
-      animation: fadeInLeft 0.5s ease forwards;
-    }
-    .fade-out-left {
-      animation: fadeOutLeft 0.5s ease forwards;
-    }
+    .fade-in-left { animation: fadeInLeft 0.5s ease forwards; }
+    .fade-out-left { animation: fadeOutLeft 0.5s ease forwards; }
     @keyframes fadeInLeft {
       0% { opacity: 0; transform: translateX(-50px); }
       100% { opacity: 1; transform: translateX(0); }
@@ -216,7 +164,7 @@
 <body>
   <!-- Background container -->
   <div id="bg-container"></div>
-
+  
   <!-- MAIN TITLE -->
   <div class="main-title">
     <h1>Raider TC Stats</h1>
@@ -231,31 +179,31 @@
       <a href="#" onclick="switchSection('de-section')" class="de">DE</a>
     </div>
   </div>
-
+  
   <!-- QB SECTION -->
   <section id="qb-section">
     <h2>Quarterback Stats</h2>
     <div class="list-container" id="qb-container"></div>
   </section>
-
+  
   <!-- WR SECTION -->
   <section id="wr-section">
     <h2>Wide Receiver Stats</h2>
     <div class="list-container" id="wr-container"></div>
   </section>
-
+  
   <!-- DB SECTION -->
   <section id="db-section">
     <h2>Defensive Back Stats</h2>
     <div class="list-container" id="db-container"></div>
   </section>
-
+  
   <!-- DE SECTION -->
   <section id="de-section">
     <h2>Defensive End Stats</h2>
     <div class="list-container" id="de-container"></div>
   </section>
-
+  
   <script>
     // Background images for each stat page
     const bgImages = {
@@ -265,23 +213,23 @@
       "de-section": "https://w0.peakpx.com/wallpaper/803/1005/HD-wallpaper-las-vegas-raiders-american-football-team-black-stone-background-las-vegas-raiders-logo-grunge-art-nfl-american-football-usa-las-vegas-raiders-emblem.jpg"
     };
 
-    // CSV links
+    // CSV links for each stat page
     const CSV_QB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQv20vUSyozLzoZmyfQGHiPHx0JNlnZoZlGxa6K9ZjdCPhHdjWXb8ToDvebBaxRz3CJfWPjj0bI18Zy/pub?output=csv";
     const CSV_WR_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpAk3lRX606aOmjB9zgpHaQzxlKc-stoJRD-1DW2UjkeDUIpgfvorq1qfedCsOEc9Zg_8Z6RxCJV9x/pub?output=csv";
     const CSV_DB_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4EemaFNDP_y7-mnuKQdES6iAoNCAKpeWD0kbDsY_geFPbttzs0umb5Ja-Xg2fu8hpIE3uhP3fXdIO/pub?output=csv";
     const CSV_DE_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQuB1-17W9_4DvGrinp3ovMjspVwLlVm6sL44sQM1yZY-EttTSKCVfazjlnmaglwf_bN0Acq0XOmIw8/pub?output=csv";
 
-    // We define how many columns each CSV has (excluding rank).
-    // If you skip columns, adjust accordingly.
-    const colCountQB = 10; 
-    const colCountWR = 9;  
-    const colCountDB = 8;  
-    const colCountDE = 8;  
+    // Define how many CSV columns (excluding the rank cell) each position has.
+    // Since we are merging "STARs" with "Usernames", the displayed count is one less.
+    const colCountQB = 10;  // Adjust as needed for QB CSV minus STARs column.
+    const colCountWR = 9;   // Adjust as needed for WR CSV minus STARs.
+    const colCountDB = 8;   // Adjust as needed for DB CSV minus STARs.
+    const colCountDE = 8;   // Adjust as needed for DE CSV minus STARs.
 
     // Section IDs
     const sections = ["qb-section", "wr-section", "db-section", "de-section"];
 
-    // On DOM load, build all pages & show QB by default
+    // On DOM load, build tables and show QB by default.
     window.addEventListener('DOMContentLoaded', () => {
       fetchAndBuildList(CSV_QB_LINK, "qb-container", colCountQB);
       fetchAndBuildList(CSV_WR_LINK, "wr-container", colCountWR);
@@ -290,7 +238,7 @@
       showSection("qb-section");
     });
 
-    // Switch sections
+    // Switch sections.
     function switchSection(newSectionId) {
       showSection(newSectionId);
     }
@@ -316,7 +264,7 @@
       });
     }
 
-    // Fade out/in background
+    // Fade background in/out when switching sections.
     function updateBackground(sectionId) {
       const bgContainer = document.getElementById("bg-container");
       bgContainer.style.opacity = 0;
@@ -326,7 +274,7 @@
       }, 500);
     }
 
-    // Parallax effect
+    // Parallax effect for scrolling.
     window.addEventListener('scroll', () => {
       const scrollPos = window.scrollY;
       const factor = 0.3;
@@ -336,45 +284,43 @@
 
     /**
      * Build a grid-based table from the CSV.
-     * Merges "STARs" into the same cell as "Usernames", second line.
+     * Merges the "STARs" column with "Usernames" (star rating appears on a new line below the username).
+     * The header row does not include a separate "STARs" column.
+     * @param {string} csvLink - The CSV URL.
+     * @param {string} containerId - The container element ID.
+     * @param {number} colCount - Number of CSV columns (excluding the rank cell) after removing "STARs".
      */
     function fetchAndBuildList(csvLink, containerId, colCount) {
       fetch(csvLink)
         .then(response => response.text())
         .then(csvText => {
           const results = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-          const data = results.data;            
-          let fields = results.meta.fields;     
-
-          // Remove the second-last column or any undesired columns
-          // Then reorder so "STARs" doesn't get its own column
-          // because we'll merge it under "Usernames."
-          fields = customReorderFields(fields);
+          const data = results.data;  // row objects
+          // Get original fields from CSV then reorder if needed.
+          let originalFields = customReorderFields(results.meta.fields);
+          // For header display, remove "STARs" column.
+          let displayFields = originalFields.filter(f => f.toUpperCase() !== "STARS");
 
           const container = document.getElementById(containerId);
           container.innerHTML = "";
 
-          // Grid template: rank + as many columns as we have in fields
-          const gridTemplate = `60px repeat(${fields.length}, 1fr)`;
+          // Build grid template: 60px for rank + displayFields.length columns.
+          const gridTemplate = `60px repeat(${displayFields.length}, 1fr)`;
 
-          // Heading row
+          // Build heading row.
           const headingRow = document.createElement("div");
           headingRow.classList.add("heading-row", "fade-in-left");
           headingRow.style.gridTemplateColumns = gridTemplate;
           headingRow.style.animationDelay = "0s";
 
-          // Rank heading
+          // Rank heading cell (blank so index isn't shown in header).
           const rankHeading = document.createElement("div");
           rankHeading.classList.add("heading-cell", "rank-cell");
-          rankHeading.textContent = "Rank";
+          rankHeading.textContent = "";
           headingRow.appendChild(rankHeading);
 
-          // For each field (except "STARs" if we are merging?), we show heading
-          fields.forEach(fieldName => {
-            // We'll skip "STARs" in the heading if we want to hide that column
-            // because it merges under "Usernames"
-            if (fieldName.toUpperCase() === "STARS") return;
-
+          // Create header cells from displayFields.
+          displayFields.forEach(fieldName => {
             const cell = document.createElement("div");
             cell.classList.add("heading-cell");
             cell.textContent = fieldName;
@@ -382,14 +328,14 @@
           });
           container.appendChild(headingRow);
 
-          // Build each data row
+          // Build each data row.
           data.forEach((rowObj, index) => {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("player-row", "fade-in-left");
             rowDiv.style.gridTemplateColumns = gridTemplate;
             rowDiv.style.animationDelay = ((index + 1) * 0.1) + "s";
 
-            // Rank cell
+            // Create rank cell.
             const rankDiv = document.createElement("div");
             rankDiv.classList.add("player-rank");
             rankDiv.textContent = index + 1;
@@ -399,34 +345,26 @@
             else                  rankDiv.classList.add("other");
             rowDiv.appendChild(rankDiv);
 
-            // Now for each field in the new order
-            fields.forEach(fieldName => {
-              if (fieldName.toUpperCase() === "STARS") {
-                // We do NOT create a separate cell for "STARs."
-                // Instead, we merge it into the "Usernames" cell. 
-                return;
-              }
-
+            // For each field in displayFields.
+            displayFields.forEach(fieldName => {
               const cellDiv = document.createElement("div");
               cellDiv.classList.add("player-cell");
               let rawValue = rowObj[fieldName] || "";
 
+              // If this is the "Usernames" column, merge star rating (from originalFields) underneath.
               if (fieldName.toUpperCase() === "USERNAMES") {
-  // Grab star rating from the "STARs" column
-  const starValue = parseFloat(rowObj["STARs"] || 0);
-  if (starValue > 0) {
-    // Username + <br> + star emojis
-    cellDiv.innerHTML = rawValue + "<br>" + "⭐".repeat(Math.floor(starValue));
-  } else {
-    cellDiv.textContent = rawValue;
-  }
-} 
- else {
+                const starValue = parseFloat(rowObj["STARs"] || 0);
+                if (starValue > 0) {
+                  // Use innerHTML with a <br> tag for a line break.
+                  cellDiv.innerHTML = rawValue + "<br>" + "⭐".repeat(Math.floor(starValue));
+                } else {
+                  cellDiv.textContent = rawValue;
+                }
+              } else {
                 cellDiv.textContent = rawValue;
               }
               rowDiv.appendChild(cellDiv);
             });
-
             container.appendChild(rowDiv);
           });
         })
@@ -434,19 +372,14 @@
     }
 
     /**
-     * Example reorder function:
-     *  - Remove the second-last column or any undesired columns
-     *  - Keep "STARs" so we can merge it into "Usernames" but skip it in the actual heading
+     * customReorderFields:
+     * Remove any unwanted columns.
+     * Ensure "STARs" remains in the originalFields array (for merging)
+     * but will be filtered out of displayFields.
      */
     function customReorderFields(fields) {
-      // Example: remove a known column "SomeColumn" or the second-last column
-      // fields.splice(fields.length - 2, 1); // remove second-last
-      // OR remove any specific column by name
+      // Example: Remove a specific column by name if needed.
       fields = fields.filter(f => f !== "SomeColumn");
-
-      // We keep "STARs" in the array, but won't display it as a separate column
-      // because we merge it with "Usernames" in the iteration.
-
       return fields;
     }
   </script>
